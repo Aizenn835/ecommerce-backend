@@ -35,7 +35,7 @@ public class CartServiceImpl implements CartService {
     public List<ResponseCartDTO> getAllUserCart(String email) {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
-        List<CartEntity> cartItems = cartRepository.findByUser(user);
+        List<CartEntity> cartItems = cartRepository.findByUserOrderByIdAsc(user);
         return cartItems.stream()
                 .map(cartMapper::mapToCartDTO)
                 .toList();
@@ -62,11 +62,23 @@ public class CartServiceImpl implements CartService {
         }
     }
     @Override
-    public void deleteToCart(String email , Long productId){ // validate if the actual product exist in table
+    @Transactional(rollbackFor = Exception.class)
+    public void updateQuantity( Long id , int quantity){ // should i update the price as well?
+        CartEntity cart = cartRepository.findById(id)
+                .orElseThrow(CartNotFoundException::new);
+        if(quantity <= 0) {
+            cartRepository.delete(cart);
+            return;
+        }
+        cart.setQuantity(quantity);
+        cartRepository.save(cart);
+    }
+    @Override
+    public void deleteToCart(String email , Long id){ // this needs to find the cart id
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
         CartEntity cart = cartRepository
-                .findByUser_IdAndProduct_Id(user.getId() , productId)
+                .findByUser_IdAndId(user.getId() , id)
                 .orElseThrow(CartNotFoundException::new);
         cartRepository.delete(cart);
     }

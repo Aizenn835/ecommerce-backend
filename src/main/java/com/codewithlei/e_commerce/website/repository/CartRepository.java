@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CartRepository extends JpaRepository<CartEntity , Long> {
-    Optional<CartEntity> findByUser_IdAndProduct_Id(Long userId, Long productId);
+    Optional<CartEntity> findByUser_IdAndId(Long userId, Long id);
     Optional<CartEntity> findByUserAndProduct(UserEntity user, ProductEntity product);
-    List<CartEntity> findByUser(UserEntity user);
+    List<CartEntity> findByUserOrderByIdAsc(UserEntity user);
     Boolean existsByUser_IdAndProduct_Id(Long userId, Long productId);
 }

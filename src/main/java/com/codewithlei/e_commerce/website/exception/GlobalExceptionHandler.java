@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
                 .response(e.getMessage())
                 .localDateTime(LocalDateTime.now())
                 .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(error);
     }
     @ExceptionHandler(CartNotFoundException.class)
@@ -62,7 +62,7 @@ public class GlobalExceptionHandler {
                 .response(e.getMessage())
                 .localDateTime(LocalDateTime.now())
                 .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(error);
     }
     @ExceptionHandler(FavoriteNotFoundException.class)
