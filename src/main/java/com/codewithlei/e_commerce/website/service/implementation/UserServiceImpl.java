@@ -8,6 +8,7 @@ import com.codewithlei.e_commerce.website.mapper.UserMapper;
 import com.codewithlei.e_commerce.website.model.entity.UserEntity;
 import com.codewithlei.e_commerce.website.repository.UserRepository;
 import com.codewithlei.e_commerce.website.security.JwtService;
+import com.codewithlei.e_commerce.website.service.EmailService;
 import com.codewithlei.e_commerce.website.service.UserService;
 import com.codewithlei.e_commerce.website.validation.UserValidation;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final UserValidation userValidation;
+    private final EmailService emailService;
 
     @Override
     public AuthToken register(CreateUserDTO dto){
@@ -34,6 +36,7 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userMapper.mapToEntity(dto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+        emailService.sendRegisterNotification(dto.getEmail() , dto.getUsername() );
         String token = jwtService.generateToken(
                 user.getEmail() ,
                 user.getRole().name());

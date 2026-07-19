@@ -12,7 +12,6 @@ import com.codewithlei.e_commerce.website.repository.CartRepository;
 import com.codewithlei.e_commerce.website.repository.ProductRepository;
 import com.codewithlei.e_commerce.website.repository.UserRepository;
 import com.codewithlei.e_commerce.website.service.CartService;
-import com.codewithlei.e_commerce.website.validation.CartValidation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,6 @@ public class CartServiceImpl implements CartService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final CartMapper cartMapper;
-    private final CartValidation cartValidation;
 
     @Override
     public List<ResponseCartDTO> getAllUserCart(String email) {
@@ -63,7 +61,7 @@ public class CartServiceImpl implements CartService {
     }
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateQuantity( Long id , int quantity){ // should i update the price as well?
+    public void updateQuantity( Long id , int quantity){ // Should i update the price as well?
         CartEntity cart = cartRepository.findById(id)
                 .orElseThrow(CartNotFoundException::new);
         if(quantity <= 0) {
@@ -82,6 +80,4 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(CartNotFoundException::new);
         cartRepository.delete(cart);
     }
-
-
 }

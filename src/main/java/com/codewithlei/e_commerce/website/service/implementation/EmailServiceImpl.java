@@ -1,0 +1,32 @@
+package com.codewithlei.e_commerce.website.service.implementation;
+
+import com.codewithlei.e_commerce.website.service.EmailService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+
+@Service
+@RequiredArgsConstructor
+public class EmailServiceImpl implements EmailService {
+
+    private final JavaMailSender mailSender;
+
+    @Override
+    @Async
+    public void sendRegisterNotification(String email , String username ){
+        SimpleMailMessage mail =  new SimpleMailMessage();
+        mail.setTo(email);
+        mail.setSubject("Welcome to SwiftCart!");
+        mail.setText("Hi there " + username + "!" + "\n\n" +
+                "Welcome to SwiftCart! We're glad to have you with us.\n\n" +
+                "Your account has been created successfully, and you're all set to start browsing " +
+                "our latest collections — from everyday essentials to new arrivals.\n\n" +
+                "If you ever have questions or run into any issues, feel free to reach out to our support team.\n\n" +
+                "Happy shopping!\n" +
+                "The SwiftCart Team");
+        mailSender.send(mail);
+    }
+}
