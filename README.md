@@ -55,6 +55,8 @@ git clone https://github.com/Aizenn835/ecommerce-backend.git
 DB_USERNAME
 DB_PASSWORD
 JWT_SIGNING_KEY
+MAIL_USERNAME
+MAIL_PASSWORD
 ```
 
 4. Run the application.
