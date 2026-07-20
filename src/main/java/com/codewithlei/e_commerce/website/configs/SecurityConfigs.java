@@ -2,6 +2,7 @@ package com.codewithlei.e_commerce.website.configs;
 
 import com.codewithlei.e_commerce.website.security.CustomUserDetailsService;
 import com.codewithlei.e_commerce.website.security.JwtAuthFilter;
+import com.codewithlei.e_commerce.website.security.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,7 @@ import java.util.List;
 public class SecurityConfigs {
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtAuthFilter jwtAuthFilter;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -41,6 +43,8 @@ public class SecurityConfigs {
                         .requestMatchers("/auth/**" ,"/uploads/**").permitAll()
                         .anyRequest()
                         .authenticated())
+               .oauth2Login((oauth2) -> oauth2
+                       .successHandler(oAuth2SuccessHandler))
                 .addFilterBefore(jwtAuthFilter , UsernamePasswordAuthenticationFilter.class)
                 .authenticationProvider(authenticationProvider())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
