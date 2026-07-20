@@ -44,15 +44,19 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public AuthToken login(LoginRequest loginRequest){
+        UserEntity user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(UserNotFoundException::new);
+
+        if(user.getOauthAccount()){
+            throw new RuntimeException("This account uses Google Sign-In. Please log in with Google instead.");
+        }
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginRequest.getEmail(),
                 loginRequest.getPassword()
         ));
-        UserEntity userRole = userRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(UserNotFoundException::new);
         String token = jwtService.generateToken(
                 loginRequest.getEmail() ,
-                userRole.getRole().name());
+                user.getRole().name());
         return new AuthToken(token);
     }
 }

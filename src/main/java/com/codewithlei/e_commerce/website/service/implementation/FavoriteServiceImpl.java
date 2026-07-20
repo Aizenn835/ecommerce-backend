@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.List;
 
 
@@ -29,7 +30,6 @@ public class FavoriteServiceImpl implements FavoriteService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final FavoriteMapper favoriteMapper;
-    private final CartRepository cartRepository;
 
     @Override
     public void toggleFavorite(String email , Long id){
@@ -44,6 +44,7 @@ public class FavoriteServiceImpl implements FavoriteService {
              FavoriteEntity favorite = FavoriteEntity.builder()
                      .user(userDetails)
                      .product(productDetails)
+                     .time(LocalTime.now())
                      .build();
              favoriteRepository.save(favorite);
          }

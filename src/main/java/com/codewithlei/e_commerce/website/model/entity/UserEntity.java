@@ -22,8 +22,10 @@ public class UserEntity {
     private String email;
     @NotBlank(message = "Username is empty!")
     private String username;
-    @NotBlank(message = "Password is required!")
+    @Column(nullable = true)
     private String password;
+    @Column(nullable = false)
+    private Boolean OauthAccount;
     @Enumerated(EnumType.STRING)
     private Roles role;
 }
