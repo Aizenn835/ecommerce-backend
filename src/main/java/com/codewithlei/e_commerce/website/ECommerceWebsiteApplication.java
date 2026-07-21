@@ -10,6 +10,9 @@ public class ECommerceWebsiteApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ECommerceWebsiteApplication.class, args);
+
+        //test google client
+        System.out.println("Client ID loaded: " + System.getenv("GOOGLE_CLIENT_ID"));
 	}
 
 }
