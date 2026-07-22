@@ -25,7 +25,7 @@ public class UserEntity {
     @Column(nullable = true)
     private String password;
     @Column(nullable = false)
-    private Boolean OauthAccount;
+    private Boolean oauthAccount;
     @Enumerated(EnumType.STRING)
     private Roles role;
 }

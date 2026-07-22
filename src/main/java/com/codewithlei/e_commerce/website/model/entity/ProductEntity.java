@@ -23,6 +23,7 @@ public class ProductEntity {
     private String productName;
     @Column(nullable = false)
     private BigDecimal price;
+    @Column(columnDefinition = "TEXT")
     @NotBlank(message = "Description is blank!")
     private String productDescription; // add text size
     @Enumerated(EnumType.STRING)

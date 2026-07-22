@@ -3,6 +3,7 @@ package com.codewithlei.e_commerce.website.configs;
 import com.codewithlei.e_commerce.website.security.CustomUserDetailsService;
 import com.codewithlei.e_commerce.website.security.JwtAuthFilter;
 import com.codewithlei.e_commerce.website.security.OAuth2SuccessHandler;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,11 +41,16 @@ public class SecurityConfigs {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**" ,"/uploads/**").permitAll()
+                        .requestMatchers("/auth/**" ,"/uploads/**" , "/oauth2/**").permitAll()
                         .anyRequest()
                         .authenticated())
-               .oauth2Login((oauth2) -> oauth2
+                .oauth2Login((oauth2) -> oauth2
                        .successHandler(oAuth2SuccessHandler))
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(((request, response, authException) -> {
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                        }))
+                )
                 .addFilterBefore(jwtAuthFilter , UsernamePasswordAuthenticationFilter.class)
                 .authenticationProvider(authenticationProvider())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

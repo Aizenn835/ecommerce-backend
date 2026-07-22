@@ -15,7 +15,7 @@ public class UserMapper {
                 .email(dto.getEmail())
                 .username(dto.getUsername())
                 .password(dto.getPassword())
-                .OauthAccount(false)
+                .oauthAccount(false)
                 .role(Roles.USER)
                 .build();
     }

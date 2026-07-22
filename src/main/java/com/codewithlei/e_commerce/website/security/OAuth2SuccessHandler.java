@@ -43,12 +43,13 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                             .email(email)
                             .username(name)
                             .password("")
-                            .OauthAccount(true)
-                            .role(Roles.USER)
-                            .build();
+                            .oauthAccount(true)
+                                .role(Roles.USER)
+                                .build();
                     return userRepository.save(newUser);
                 });
                 String token = jwtService.generateToken(user.getEmail() , user.getRole().name());
+                    System.out.println("OAuth success handler called!");
                 response.sendRedirect(frontendUrl + "/pages/home.html?token=" + token);
      }
 }

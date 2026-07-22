@@ -5,11 +5,9 @@ import com.codewithlei.e_commerce.website.exception.FavoriteException.FavoriteNo
 import com.codewithlei.e_commerce.website.exception.ProductException.ProductNotFoundException;
 import com.codewithlei.e_commerce.website.exception.UserException.UserNotFoundException;
 import com.codewithlei.e_commerce.website.mapper.FavoriteMapper;
-import com.codewithlei.e_commerce.website.model.entity.CartEntity;
 import com.codewithlei.e_commerce.website.model.entity.FavoriteEntity;
 import com.codewithlei.e_commerce.website.model.entity.ProductEntity;
 import com.codewithlei.e_commerce.website.model.entity.UserEntity;
-import com.codewithlei.e_commerce.website.repository.CartRepository;
 import com.codewithlei.e_commerce.website.repository.FavoriteRepository;
 import com.codewithlei.e_commerce.website.repository.ProductRepository;
 import com.codewithlei.e_commerce.website.repository.UserRepository;
