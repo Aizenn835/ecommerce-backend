@@ -12,7 +12,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class CartEntity {
+public class    CartEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
