@@ -8,6 +8,7 @@ import com.codewithlei.e_commerce.website.mapper.CartMapper;
 import com.codewithlei.e_commerce.website.model.entity.CartEntity;
 import com.codewithlei.e_commerce.website.model.entity.ProductEntity;
 import com.codewithlei.e_commerce.website.model.entity.UserEntity;
+import com.codewithlei.e_commerce.website.model.enums.CartAction;
 import com.codewithlei.e_commerce.website.repository.CartRepository;
 import com.codewithlei.e_commerce.website.repository.ProductRepository;
 import com.codewithlei.e_commerce.website.repository.UserRepository;
@@ -39,25 +40,54 @@ public class CartServiceImpl implements CartService {
                 .toList();
     }
     @Override
-    @Transactional(rollbackFor = Exception.class) // needs to check if the user already added the same product in the database
-    public void addToCart(String email , Long id , int quantity){
-        UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(UserNotFoundException::new);
-        ProductEntity product = productRepository.findById(id)
-                .orElseThrow(ProductNotFoundException::new);
-        Optional<CartEntity> existingCart = cartRepository.findByUserAndProduct(user , product);
-        if(existingCart.isPresent()){
+    @Transactional(rollbackFor = Exception.class)
+    public void addToCart(String email, Long id, int quantity) {
+        UserEntity user = getUser(email);
+        ProductEntity product = getProduct(id);
+
+        saveOrUpdateCart(user, product, quantity, CartAction.DECREASE);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void addWishlistItemToCart(String email, Long id) {
+        UserEntity user = getUser(email);
+        ProductEntity product = getProduct(id);
+        saveOrUpdateCart(user, product, 1, CartAction.INCREASE);
+    }
+
+
+    private void saveOrUpdateCart(UserEntity user, ProductEntity product, int quantity, CartAction cartAction) {
+
+        Optional<CartEntity> existingCart = cartRepository.findByUserAndProduct(user, product);
+
+        if(existingCart.isPresent()) {
             CartEntity cart = existingCart.get();
-            cart.setQuantity(quantity);
+            if(cartAction == CartAction.INCREASE) {
+                cart.setQuantity(cart.getQuantity() + quantity);
+            } else {
+                cart.setQuantity(quantity);
+            }
             cartRepository.save(cart);
-        }else{
+
+        } else {
             CartEntity cart = CartEntity.builder()
-                    .product(product)
                     .user(user)
+                    .product(product)
                     .quantity(quantity)
                     .build();
+
             cartRepository.save(cart);
         }
+    }
+    private UserEntity getUser(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+    }
+
+    private ProductEntity getProduct(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(ProductNotFoundException::new);
     }
     @Override
     @Transactional(rollbackFor = Exception.class)

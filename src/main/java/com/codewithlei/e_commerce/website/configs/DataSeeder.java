@@ -21,7 +21,7 @@ public class DataSeeder implements CommandLineRunner {
         seedProduct();
     }
     public void seedProduct(){
-       if(productRepository.count() > 0){
+       if(productRepository.count() == 0){
            return;
        }
         List<ProductEntity> products = List.of(

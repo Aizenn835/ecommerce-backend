@@ -27,6 +27,11 @@ public class CartController {
         cartService.addToCart(authentication.getName() , request.getProductId() , request.getQuantity());
         return ResponseEntity.ok("Successfully added!");
     }
+    @PostMapping("/wishlist-add/{id}")
+    public ResponseEntity<Map<String , String>> addByWishlist(Authentication authentication , @PathVariable("id") Long id ){
+        cartService.addWishlistItemToCart(authentication.getName() , id);
+        return ResponseEntity.ok(Map.of("message" , "Successfully Added To Product "));
+    }
     @PatchMapping("/{id}")
     public ResponseEntity<String> updateQuantity( @PathVariable("id")Long id , @RequestParam int quantity){
         cartService.updateQuantity( id , quantity);
