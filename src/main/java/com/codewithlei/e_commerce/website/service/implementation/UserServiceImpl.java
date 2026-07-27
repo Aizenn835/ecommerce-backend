@@ -31,19 +31,15 @@ public class UserServiceImpl implements UserService {
     private final EmailService emailService;
 
     @Override
-    public AuthToken register(CreateUserDTO dto){
+    public void register(CreateUserDTO dto) { // change the logic so the user don't log in when creating an account
         userValidation.validateUser(dto);
         UserEntity user = userMapper.mapToEntity(dto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-        emailService.sendRegisterNotification(dto.getEmail() , dto.getUsername() );
-        String token = jwtService.generateToken(
-                user.getEmail() ,
-                user.getRole().name());
-        return new AuthToken(token);
+        emailService.sendRegisterNotification(dto.getEmail(), dto.getUsername());
     }
     @Override
-    public AuthToken login(LoginRequest loginRequest){
+    public AuthToken login(LoginRequest loginRequest){ // validation required
         UserEntity user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(UserNotFoundException::new);
 

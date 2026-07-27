@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface UserService {
-    AuthToken register(CreateUserDTO dto);
+    void register(CreateUserDTO dto);
     AuthToken login(LoginRequest loginRequest);
 }
