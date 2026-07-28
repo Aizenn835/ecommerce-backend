@@ -29,4 +29,18 @@ public class EmailServiceImpl implements EmailService {
                 "The SwiftCart Team");
         mailSender.send(mail);
     }
+    @Override
+    @Async
+    public void sendPasswordTokenNotification(String email , String username , int token) {
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(email);
+        mail.setSubject("Your SwiftCart password reset code");
+        mail.setText("Hi there! " + username + "\n\n" +
+                "We received a request to reset your SwiftCart password.\n\n" +
+                "Your verification code is: " + token + "\n\n" +
+                "This code will expire in 10 minutes. If you didn't request this, " +
+                "you can safely ignore this email — your password won't be changed.\n\n" +
+                "The SwiftCart Team");
+        mailSender.send(mail);
+    }
 }

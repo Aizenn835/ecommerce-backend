@@ -42,15 +42,15 @@ public class SecurityConfigs {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**" ,"/uploads/**" , "/oauth2/**").permitAll()
+                        .requestMatchers("/auth/**" ,"/uploads/**" , "/oauth2/**" , "/password/**").permitAll()
                         .anyRequest()
                         .authenticated())
                 .oauth2Login((oauth2) -> oauth2
                        .successHandler(oAuth2SuccessHandler))
                 .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(((request, response, authException) -> {
+                        .authenticationEntryPoint((request, response, authException) -> {
                             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-                        }))
+                        })
                 )
                 .addFilterBefore(jwtAuthFilter , UsernamePasswordAuthenticationFilter.class)
                 .authenticationProvider(authenticationProvider())
