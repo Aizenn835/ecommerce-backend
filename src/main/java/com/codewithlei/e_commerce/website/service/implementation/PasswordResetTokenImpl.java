@@ -1,6 +1,5 @@
 package com.codewithlei.e_commerce.website.service.implementation;
 
-import com.codewithlei.e_commerce.website.dto.passwordResetToken.ResponsePasswordToken;
 import com.codewithlei.e_commerce.website.model.entity.PasswordResetTokenEntity;
 import com.codewithlei.e_commerce.website.repository.PasswordResetTokenRepository;
 import com.codewithlei.e_commerce.website.repository.UserRepository;
@@ -9,10 +8,8 @@ import com.codewithlei.e_commerce.website.service.PasswordResetTokenService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-
 
 @Service
 public class PasswordResetTokenImpl implements PasswordResetTokenService {
@@ -38,7 +35,7 @@ public class PasswordResetTokenImpl implements PasswordResetTokenService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponsePasswordToken resetPassword(String email){
+    public void resetPasswordEmail(String email){
         userRepository.findByEmail(email).ifPresent(user -> {
             passwordResetTokenRepository.deleteByUser(user);
             PasswordResetTokenEntity reset = PasswordResetTokenEntity.builder()
@@ -53,11 +50,22 @@ public class PasswordResetTokenImpl implements PasswordResetTokenService {
             passwordResetTokenRepository.save(reset);
             emailService.sendPasswordTokenNotification(user.getEmail() , user.getUsername(), reset.getResetCode());
         });
-        return new ResponsePasswordToken("If that email exists, a reset code has been sent!");
+    }
+    @Override
+    public boolean verifyPasswordToken(String email , int code){
+        return userRepository.findByEmail(email)
+                .flatMap(passwordResetTokenRepository::findTopByUserAndUsedFalseOrderByCreatedAtDesc)
+                .filter(resetToken -> resetToken.getResetCode() == code)
+                .filter(resetToken -> resetToken.getExpiredAt().isAfter(LocalDateTime.now()))
+                .map(entityToken -> {
+                    entityToken.setUsed(true);
+                    passwordResetTokenRepository.save(entityToken);
+                    return true;
+                }).orElse(false);
+    }
+    public int generateCode(){
+        return 100000 + secureRandom.nextInt(900000);
     }
 
-    public int generateCode(){
-            return 100000 + secureRandom.nextInt(900000);
-    }
 
 }

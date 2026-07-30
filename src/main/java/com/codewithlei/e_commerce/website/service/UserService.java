@@ -9,4 +9,5 @@ import org.springframework.stereotype.Component;
 public interface UserService {
     void register(CreateUserDTO dto);
     AuthToken login(LoginRequest loginRequest);
+    void resetPassword(String email , String password);
 }

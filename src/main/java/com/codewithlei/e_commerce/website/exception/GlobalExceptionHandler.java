@@ -4,6 +4,7 @@ import com.codewithlei.e_commerce.website.exception.CartException.CartAlreadyExi
 import com.codewithlei.e_commerce.website.exception.CartException.CartNotFoundException;
 import com.codewithlei.e_commerce.website.exception.FavoriteException.FavoriteNotFoundException;
 import com.codewithlei.e_commerce.website.exception.PasswordResetTokenException.CodeAlreadyExpiredException;
+import com.codewithlei.e_commerce.website.exception.PasswordResetTokenException.InvalidResetRequestException;
 import com.codewithlei.e_commerce.website.exception.ProductException.ProductNotFoundException;
 import com.codewithlei.e_commerce.website.exception.UserException.UserAlreadyExistException;
 import com.codewithlei.e_commerce.website.exception.UserException.UserNotFoundException;
@@ -76,14 +77,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(error);
     }
-    @ExceptionHandler(CodeAlreadyExpiredException.class)
-    public ResponseEntity<?> handleCartNotFound(CodeAlreadyExpiredException e){
+    @ExceptionHandler(InvalidResetRequestException.class)
+    public ResponseEntity<?> handleCartNotFound(InvalidResetRequestException e){
         ErrorResponse error = ErrorResponse.builder()
-                .status(410)
+                .status(400)
                 .response(e.getMessage())
                 .localDateTime(LocalDateTime.now())
                 .build();
-        return ResponseEntity.status(HttpStatus.GONE)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(error);
     }
 

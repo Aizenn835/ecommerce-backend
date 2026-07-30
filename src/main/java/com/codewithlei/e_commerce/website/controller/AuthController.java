@@ -26,7 +26,7 @@ public class AuthController {
     }
     @PostMapping("/login")
     public ResponseEntity<AuthToken> login(@RequestBody LoginRequest loginRequest){
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.login(loginRequest));
     }
 }

@@ -1,16 +1,14 @@
 package com.codewithlei.e_commerce.website.controller;
 
 import com.codewithlei.e_commerce.website.dto.passwordResetToken.RequestPasswordToken;
-import com.codewithlei.e_commerce.website.dto.passwordResetToken.ResponsePasswordToken;
-import com.codewithlei.e_commerce.website.model.entity.PasswordResetTokenEntity;
-import com.codewithlei.e_commerce.website.repository.PasswordResetTokenRepository;
+import com.codewithlei.e_commerce.website.dto.passwordResetToken.VerifyCodeRequest;
 import com.codewithlei.e_commerce.website.service.PasswordResetTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/password")
@@ -18,16 +16,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PasswordResetTokenController {
     private final PasswordResetTokenService passwordResetTokenService;
-    private final PasswordResetTokenRepository repo;
 
     @PostMapping("/reset")
-    public ResponseEntity<ResponsePasswordToken> resetPassword(@RequestBody RequestPasswordToken request){
+    public ResponseEntity<Map<String , String>> resetPassword(@RequestBody RequestPasswordToken request){
+        passwordResetTokenService.resetPasswordEmail(request.getEmail());
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(passwordResetTokenService.resetPassword(request.getEmail()));
+                .body(Map.of("message" , "If that email exists, a reset code has been sent!"));
     }
-    @GetMapping("/get")
-    public List<PasswordResetTokenEntity> getData(){
-        return repo.findAll();
+    @PostMapping("/verify-code")
+    public ResponseEntity<Map<String , String>> verifyCode(@RequestBody VerifyCodeRequest verifyRequest){
+        boolean isValid =  passwordResetTokenService.verifyPasswordToken(verifyRequest.getEmail() , verifyRequest.getCode());
+            if(!isValid){
+                return ResponseEntity.badRequest().body(Map.of("message" , "Invalid or expired code."));
+            }
+            return ResponseEntity.ok(Map.of("message" , "Code verified successfully."));
     }
 
 }
