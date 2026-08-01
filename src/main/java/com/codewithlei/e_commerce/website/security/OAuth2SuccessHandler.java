@@ -22,7 +22,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     public OAuth2SuccessHandler(UserRepository userRepository ,
                                 JwtService jwtService,
-                                @Value("${app.frontend-url}") String frontendUrl){
+                                @Value("${app.frontend.url}") String frontendUrl){
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.frontendUrl = frontendUrl;

@@ -31,7 +31,7 @@ public class PasswordResetTokenImpl implements PasswordResetTokenService {
 
     /*
     - check for some logical error here tomorrow
-    - Also remove the latest code given to the user if the code expired
+    - Also remove the latest reset code given to the user if the code expired
      */
     @Override
     @Transactional(rollbackFor = Exception.class)

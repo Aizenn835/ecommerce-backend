@@ -3,6 +3,7 @@ package com.codewithlei.e_commerce.website.controller;
 import com.codewithlei.e_commerce.website.dto.auth.AuthToken;
 import com.codewithlei.e_commerce.website.dto.auth.LoginRequest;
 import com.codewithlei.e_commerce.website.dto.user.CreateUserDTO;
+import com.codewithlei.e_commerce.website.dto.user.ResetPassword;
 import com.codewithlei.e_commerce.website.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,5 +29,10 @@ public class AuthController {
     public ResponseEntity<AuthToken> login(@RequestBody LoginRequest loginRequest){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.login(loginRequest));
+    }
+    @PatchMapping("/reset-password")
+    public ResponseEntity<Map<String , String>> resetPassword(@RequestBody @Valid ResetPassword reset){
+        userService.resetPassword(reset.getEmail()  , reset.getPassword());
+        return ResponseEntity.ok(Map.of("message" , "Successfully Updated"));
     }
 }

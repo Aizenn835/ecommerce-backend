@@ -60,14 +60,14 @@ public class UserServiceImpl implements UserService {
                 user.getRole().name());
         return new AuthToken(token);
     }
-    // Implements this tomorrow
+    // Do oauth account become oauthAccount(false)?
     @Override
     public void resetPassword(String email , String password){
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
         boolean isValidRequest = passwordResetTokenRepository
-                .findTopByUserAndUsedFalseOrderByCreatedAtDesc(user)
+                .findTopByUserAndUsedTrueOrderByCreatedAtDesc(user)
                 .filter(token -> token.getExpiredAt().isAfter(LocalDateTime.now()))
                 .isPresent();
 

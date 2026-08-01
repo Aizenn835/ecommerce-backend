@@ -11,4 +11,5 @@ public interface PasswordResetTokenRepository extends JpaRepository<PasswordRese
     @Transactional
     void deleteByUser(UserEntity user);
     Optional<PasswordResetTokenEntity> findTopByUserAndUsedFalseOrderByCreatedAtDesc(UserEntity user);
+    Optional<PasswordResetTokenEntity> findTopByUserAndUsedTrueOrderByCreatedAtDesc(UserEntity user);
 }
