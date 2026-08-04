@@ -28,7 +28,7 @@ public class PasswordResetTokenImpl implements PasswordResetTokenService {
         this.expiration = expiration;
         this.passwordResetTokenRepository = passwordResetTokenRepository;
     }
-
+    
     /*
     - check for some logical error here tomorrow
     - Also remove the latest reset code given to the user if the code expired

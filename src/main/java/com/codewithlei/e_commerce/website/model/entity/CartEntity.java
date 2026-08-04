@@ -12,7 +12,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class    CartEntity {
+public class CartEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,6 +25,7 @@ public class    CartEntity {
     @JoinColumn(name = "user_Id")
     private UserEntity user;
 
-    private int quantity;
+    @Column(nullable = false)
+    private Integer quantity;
 
 }

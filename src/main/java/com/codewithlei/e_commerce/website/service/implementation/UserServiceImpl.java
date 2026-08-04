@@ -61,20 +61,21 @@ public class UserServiceImpl implements UserService {
         return new AuthToken(token);
     }
     // Do oauth account become oauthAccount(false)?
-    @Override
-    public void resetPassword(String email , String password){
-        UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(UserNotFoundException::new);
+        @Override
+        public void resetPassword(String email , String password){
+            UserEntity user = userRepository.findByEmail(email)
+                    .orElseThrow(UserNotFoundException::new);
 
-        boolean isValidRequest = passwordResetTokenRepository
-                .findTopByUserAndUsedTrueOrderByCreatedAtDesc(user)
-                .filter(token -> token.getExpiredAt().isAfter(LocalDateTime.now()))
-                .isPresent();
+            boolean isValidRequest = passwordResetTokenRepository
+                    .findTopByUserAndUsedTrueOrderByCreatedAtDesc(user)
+                    .filter(token -> token.getExpiredAt().isAfter(LocalDateTime.now()))
+                    .isPresent();
 
-        if(!isValidRequest){
-            throw new InvalidResetRequestException();
+            if(!isValidRequest){
+                throw new InvalidResetRequestException();
+            }
+            user.setPassword(passwordEncoder.encode(password));
+            userRepository.save(user);
+            emailService.sendPasswordResetSuccess(user.getEmail() , user.getUsername());
         }
-        user.setPassword(passwordEncoder.encode(password));
-        userRepository.save(user);
-    }
 }

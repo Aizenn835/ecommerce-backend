@@ -38,4 +38,5 @@ public class ProductEntity {
     private String productSize;
     @NotBlank
     private String imgUrl;
+
 }

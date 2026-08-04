@@ -43,4 +43,19 @@ public class EmailServiceImpl implements EmailService {
                 "The SwiftCart Team");
         mailSender.send(mail);
     }
+    @Override
+    @Async
+    public void sendPasswordResetSuccess(String email , String username){
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(email);
+        mail.setSubject("Your Password Has Been Changed");
+        mail.setText("Hi there " + username + "!" + "\n\n" +
+                "Your SwiftCart account password has been changed successfully.\n\n" +
+                "This is a confirmation that your password was updated. You can now use your new password to sign in to your account.\n\n" +
+                "If you did not make this change, please secure your account immediately by resetting your password or contacting our support team.\n\n" +
+                "Thank you for helping us keep your account safe.\n\n" +
+                "Stay secure!\n" +
+                "The SwiftCart Team");
+        mailSender.send(mail);
+    }
 }

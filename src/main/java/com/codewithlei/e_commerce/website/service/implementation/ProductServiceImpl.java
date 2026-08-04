@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
     }
     @Override
     public List<ProductDTO> searchProducts(String keyword){
-        List<ProductEntity> product =  productRepository.findByProductNameContainingIgnoreCase(keyword);
+        List<ProductEntity> product = productRepository.findByProductNameContainingIgnoreCase(keyword);
 
         return product.stream()
                 .map(productMapper::mapToDTO)
