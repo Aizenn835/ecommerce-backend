@@ -1,8 +1,12 @@
 package com.codewithlei.e_commerce.website.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -27,5 +31,10 @@ public class CartEntity {
 
     @Column(nullable = false)
     private Integer quantity;
+
+    @JsonFormat(pattern = "MM/dd/yyyy HH:mm")
+    private LocalDate createdAt;
+
+
 
 }

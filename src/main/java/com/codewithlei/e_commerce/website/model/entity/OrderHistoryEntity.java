@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -32,7 +33,7 @@ public class OrderHistoryEntity {
     private String orderId;
 
     @JsonFormat(pattern = "MM/dd/yyyy HH:mm")
-    private LocalDateTime orderTime;
+    private LocalDate orderTime;
 
     @Column(nullable = false)
     private BigDecimal totalPrice;

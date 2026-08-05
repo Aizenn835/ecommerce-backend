@@ -1,6 +1,5 @@
-package com.codewithlei.e_commerce.website.dto.OrderHistoryDTO;
+package com.codewithlei.e_commerce.website.dto.orderHistoryDTO;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

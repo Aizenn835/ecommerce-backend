@@ -22,6 +22,7 @@ public class CartController {
     public List<ResponseCartDTO> getCartList(Authentication authentication){
         return cartService.getAllUserCart(authentication.getName());
     }
+    // Use map insted of returning string
     @PostMapping("/add-cart")
     public ResponseEntity<String> addToCart(Authentication authentication, @RequestBody RequestCartDTO request){
         cartService.addToCart(authentication.getName() , request.getProductId() , request.getQuantity());

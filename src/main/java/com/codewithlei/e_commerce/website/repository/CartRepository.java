@@ -14,4 +14,6 @@ public interface CartRepository extends JpaRepository<CartEntity , Long> {
     Optional<CartEntity> findByUserAndProduct(UserEntity user, ProductEntity product);
     List<CartEntity> findByUserOrderByIdAsc(UserEntity user);
     Boolean existsByUser_IdAndProduct_Id(Long userId, Long productId);
+
+    List<CartEntity> findByUser_Email(String userEmail);
 }
