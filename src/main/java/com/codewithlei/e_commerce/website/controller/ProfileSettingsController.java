@@ -1,0 +1,32 @@
+package com.codewithlei.e_commerce.website.controller;
+
+import com.codewithlei.e_commerce.website.dto.user.ResponseViewUserInformationDTO;
+import com.codewithlei.e_commerce.website.dto.user.updateViewUser.RequestUpdateUserDTO;
+import com.codewithlei.e_commerce.website.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/settings")
+@CrossOrigin(origins = "*")
+@RequiredArgsConstructor
+public class ProfileSettingsController {
+
+    private final UserService userService;
+
+    @PutMapping("/profile")
+    public ResponseEntity<Map<String , String>> updateProfile(Authentication authentication ,
+                                                              @RequestBody @Valid RequestUpdateUserDTO request){
+        userService.updateInfo(authentication.getName() , request);
+        return ResponseEntity.ok(Map.of("message" , "Successfully Updated"));
+    }
+    @GetMapping("/view-profile")
+    public ResponseViewUserInformationDTO viewProfileInfo(Authentication authentication){
+        return userService.viewUserInfo(authentication.getName());
+    }
+}

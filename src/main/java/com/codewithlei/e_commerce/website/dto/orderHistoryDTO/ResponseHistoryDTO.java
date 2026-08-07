@@ -20,5 +20,4 @@ public class ResponseHistoryDTO {
     private Integer quantity;
     private BigDecimal totalPrice;
     private DeliveryStatus status;
-
 }

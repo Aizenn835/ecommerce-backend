@@ -7,6 +7,7 @@ import com.codewithlei.e_commerce.website.exception.PasswordResetTokenException.
 import com.codewithlei.e_commerce.website.exception.PasswordResetTokenException.InvalidResetRequestException;
 import com.codewithlei.e_commerce.website.exception.ProductException.ProductNotFoundException;
 import com.codewithlei.e_commerce.website.exception.UserException.UserAlreadyExistException;
+import com.codewithlei.e_commerce.website.exception.UserException.UserEmailUnavailableException;
 import com.codewithlei.e_commerce.website.exception.UserException.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -85,6 +86,16 @@ public class GlobalExceptionHandler {
                 .localDateTime(LocalDateTime.now())
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(error);
+    }
+    @ExceptionHandler(UserEmailUnavailableException.class)
+    public ResponseEntity<?> handleEmailAlreadyExist(UserEmailUnavailableException e){
+        ErrorResponse error = ErrorResponse.builder()
+                .status(409)
+                .response(e.getMessage())
+                .localDateTime(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(error);
     }
 

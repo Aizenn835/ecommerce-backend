@@ -42,10 +42,12 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                     UserEntity newUser = UserEntity.builder()
                             .email(email)
                             .username(name)
+                            .firstname("")
+                            .lastname("")
                             .password("")
                             .oauthAccount(true)
-                                .role(Roles.USER)
-                                .build();
+                            .role(Roles.USER)
+                            .build();
                     return userRepository.save(newUser);
                 });
                 String token = jwtService.generateToken(user.getEmail() , user.getRole().name());
