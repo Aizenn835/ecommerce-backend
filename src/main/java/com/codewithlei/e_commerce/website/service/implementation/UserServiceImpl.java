@@ -93,14 +93,12 @@ public class UserServiceImpl implements UserService {
                  throw new UserEmailUnavailableException();
              }
          }
-
          userDetails.setFirstname(request.getFirstname());
          userDetails.setLastname(request.getLastname());
          userDetails.setEmail(request.getEmail());
          userDetails.setNumber(request.getNumber());
 
          userRepository.save(userDetails);
-
 
     }
     @Override

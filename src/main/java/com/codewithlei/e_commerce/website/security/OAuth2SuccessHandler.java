@@ -36,14 +36,16 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = oAuth2User.getAttribute("email");
         String name = oAuth2User.getAttribute("name");
+        String firstname = oAuth2User.getAttribute("given_name");
+        String lastname = oAuth2User.getAttribute("family_name");
 
         UserEntity user = userRepository.findByEmail(email)
                 .orElseGet(() -> {
                     UserEntity newUser = UserEntity.builder()
                             .email(email)
                             .username(name)
-                            .firstname("")
-                            .lastname("")
+                            .firstname(firstname)
+                            .lastname(lastname)
                             .password("")
                             .oauthAccount(true)
                             .role(Roles.USER)
