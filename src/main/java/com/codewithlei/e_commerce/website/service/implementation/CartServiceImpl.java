@@ -56,7 +56,6 @@ public class CartServiceImpl implements CartService {
         saveOrUpdateCart(user, product, 1, CartAction.INCREASE);
     }
 
-
     private void saveOrUpdateCart(UserEntity user, ProductEntity product, int quantity, CartAction cartAction) {
 
         Optional<CartEntity> existingCart = cartRepository.findByUserAndProduct(user, product);

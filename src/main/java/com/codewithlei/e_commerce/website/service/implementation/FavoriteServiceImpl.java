@@ -5,9 +5,11 @@ import com.codewithlei.e_commerce.website.exception.FavoriteException.FavoriteNo
 import com.codewithlei.e_commerce.website.exception.ProductException.ProductNotFoundException;
 import com.codewithlei.e_commerce.website.exception.UserException.UserNotFoundException;
 import com.codewithlei.e_commerce.website.mapper.FavoriteMapper;
+import com.codewithlei.e_commerce.website.model.entity.CartEntity;
 import com.codewithlei.e_commerce.website.model.entity.FavoriteEntity;
 import com.codewithlei.e_commerce.website.model.entity.ProductEntity;
 import com.codewithlei.e_commerce.website.model.entity.UserEntity;
+import com.codewithlei.e_commerce.website.repository.CartRepository;
 import com.codewithlei.e_commerce.website.repository.FavoriteRepository;
 import com.codewithlei.e_commerce.website.repository.ProductRepository;
 import com.codewithlei.e_commerce.website.repository.UserRepository;
@@ -17,7 +19,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -28,6 +32,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final FavoriteMapper favoriteMapper;
+    private final CartRepository cartRepository;
 
     @Override
     public void toggleFavorite(String email , Long id){
@@ -63,7 +68,44 @@ public class FavoriteServiceImpl implements FavoriteService {
         FavoriteEntity favorite = favoriteRepository.findByUser_EmailAndProduct_Id(user.getEmail() , productId)
                         .orElseThrow(FavoriteNotFoundException::new);
         favoriteRepository.delete(favorite);
+    }
+    @Override
+    public void addAllToCart(String email){
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
 
+        List<FavoriteEntity> favorite = favoriteRepository.findByUser(user);
+        List<CartEntity> cart = cartRepository.findByUser(user);
+        List<CartEntity> list = new ArrayList<>();
+
+        for(FavoriteEntity fav : favorite) {
+
+            Optional<CartEntity> cartItem = cart.stream()
+                    .filter(c -> c.getProduct().getId()
+                            .equals(fav.getProduct().getId()))
+                    .findFirst();
+
+            if(cartItem.isPresent()){
+                CartEntity newCartItem = cartItem.get();
+                newCartItem.setQuantity(newCartItem.getQuantity() + 1);
+            }else{
+                CartEntity newCartItem = CartEntity.builder()
+                        .quantity(1)
+                        .user(user)
+                        .product(fav.getProduct())
+                        .build();
+
+                list.add(newCartItem);
+            }
+        }
+        cartRepository.saveAll(list);
+    }
+    @Override
+    public Long countFavorite(String email){
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        return favoriteRepository.countByUser(user);
     }
 
 }

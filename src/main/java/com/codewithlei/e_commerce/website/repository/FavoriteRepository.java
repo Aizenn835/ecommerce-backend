@@ -17,5 +17,6 @@ public interface FavoriteRepository extends JpaRepository<FavoriteEntity , Long 
     void deleteByUser_EmailAndProduct_Id(String userEmail, Long productId);
     List<FavoriteEntity> findByUser(UserEntity user);
     Optional<FavoriteEntity> findByUser_EmailAndProduct_Id(String userEmail, Long productId);
+    Long countByUser(UserEntity user);
 
 }

@@ -9,4 +9,6 @@ public interface FavoriteService {
      void toggleFavorite(String email , Long id);
      List<ResponseFavoriteDTO> getFavorite(String email);
      void deleteFavorite(String email , Long id);
+     void addAllToCart(String email);
+     Long countFavorite(String email);
 }
