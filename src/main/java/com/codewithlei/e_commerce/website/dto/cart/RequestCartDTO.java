@@ -9,6 +9,5 @@ import lombok.*;
 @Builder
 public class RequestCartDTO {
     private Long productId;
-    private Long userId;
     private int quantity;
 }

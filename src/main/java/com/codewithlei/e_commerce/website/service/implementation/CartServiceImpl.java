@@ -1,6 +1,7 @@
 package com.codewithlei.e_commerce.website.service.implementation;
 
 import com.codewithlei.e_commerce.website.dto.cart.ResponseCartDTO;
+import com.codewithlei.e_commerce.website.dto.cart.ResponseTotalPriceDTO;
 import com.codewithlei.e_commerce.website.exception.CartException.CartNotFoundException;
 import com.codewithlei.e_commerce.website.exception.ProductException.ProductNotFoundException;
 import com.codewithlei.e_commerce.website.exception.UserException.UserNotFoundException;
@@ -9,6 +10,7 @@ import com.codewithlei.e_commerce.website.model.entity.CartEntity;
 import com.codewithlei.e_commerce.website.model.entity.ProductEntity;
 import com.codewithlei.e_commerce.website.model.entity.UserEntity;
 import com.codewithlei.e_commerce.website.model.enums.CartAction;
+import com.codewithlei.e_commerce.website.model.enums.Tax;
 import com.codewithlei.e_commerce.website.repository.CartRepository;
 import com.codewithlei.e_commerce.website.repository.ProductRepository;
 import com.codewithlei.e_commerce.website.repository.UserRepository;
@@ -17,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -100,8 +102,39 @@ public class CartServiceImpl implements CartService {
         cart.setQuantity(quantity);
         cartRepository.save(cart);
     }
+
     @Override
-    public void deleteToCart(String email , Long id){ // this needs to find the cart id
+    public ResponseTotalPriceDTO getTotalPrice(String email){
+        UserEntity user = userRepository.findByEmail(email)
+               .orElseThrow(UserNotFoundException::new);
+
+        return total(user , Tax.WITH_TAX);
+
+    }
+    @Override
+    public ResponseTotalPriceDTO getSubTotal(String email){
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        return total(user , Tax.NO_TAX);
+    }
+    private ResponseTotalPriceDTO total(UserEntity user , Tax tax){
+        BigDecimal subTotal = cartRepository.findByUser(user)
+                .stream()
+                .map(cart -> cart.getProduct().getPrice().multiply(BigDecimal.valueOf(cart.getQuantity())))
+                .reduce(BigDecimal.ZERO , BigDecimal::add);
+
+        BigDecimal total;
+        if(tax == Tax.NO_TAX){
+            total = subTotal;
+            return new ResponseTotalPriceDTO(total);
+        }else{
+            total = subTotal.add(BigDecimal.valueOf(7.65));
+            return new ResponseTotalPriceDTO(total);
+        }
+    }
+    @Override
+    public void deleteToCart(String email , Long id){
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
         CartEntity cart = cartRepository

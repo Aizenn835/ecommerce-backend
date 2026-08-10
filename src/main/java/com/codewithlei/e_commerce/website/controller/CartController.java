@@ -2,12 +2,12 @@ package com.codewithlei.e_commerce.website.controller;
 
 import com.codewithlei.e_commerce.website.dto.cart.RequestCartDTO;
 import com.codewithlei.e_commerce.website.dto.cart.ResponseCartDTO;
+import com.codewithlei.e_commerce.website.dto.cart.ResponseTotalPriceDTO;
 import com.codewithlei.e_commerce.website.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Map;
 
@@ -18,15 +18,22 @@ import java.util.Map;
 public class CartController {
     private final CartService cartService;
 
+    @GetMapping("/total-price")
+    public ResponseTotalPriceDTO getTotalPrice(Authentication authentication){
+        return cartService.getTotalPrice(authentication.getName());
+    }
+    @GetMapping("/sub-total")
+    public ResponseTotalPriceDTO getSubTotal(Authentication authentication){
+        return cartService.getSubTotal(authentication.getName());
+    }
     @GetMapping("/all-cart")
     public List<ResponseCartDTO> getCartList(Authentication authentication){
         return cartService.getAllUserCart(authentication.getName());
     }
-    // Use map insted of returning string
     @PostMapping("/add-cart")
-    public ResponseEntity<String> addToCart(Authentication authentication, @RequestBody RequestCartDTO request){
+    public ResponseEntity<Map<String , String>> addToCart(Authentication authentication, @RequestBody RequestCartDTO request){
         cartService.addToCart(authentication.getName() , request.getProductId() , request.getQuantity());
-        return ResponseEntity.ok("Successfully added!");
+        return ResponseEntity.ok(Map.of("message","Successfully added!"));
     }
     @PostMapping("/wishlist-add/{id}")
     public ResponseEntity<Map<String , String>> addByWishlist(Authentication authentication , @PathVariable("id") Long id ){
