@@ -1,6 +1,6 @@
 package com.codewithlei.e_commerce.website.security;
 
-import com.codewithlei.e_commerce.website.exception.UserException.UserNotFoundException;
+import com.codewithlei.e_commerce.website.exception.userException.UserNotFoundException;
 import com.codewithlei.e_commerce.website.model.entity.UserEntity;
 import com.codewithlei.e_commerce.website.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

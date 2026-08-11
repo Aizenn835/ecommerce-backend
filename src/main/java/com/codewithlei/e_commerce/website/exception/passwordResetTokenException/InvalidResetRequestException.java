@@ -1,4 +1,4 @@
-package com.codewithlei.e_commerce.website.exception.PasswordResetTokenException;
+package com.codewithlei.e_commerce.website.exception.passwordResetTokenException;
 
 public class InvalidResetRequestException extends RuntimeException {
     public InvalidResetRequestException(String message) {

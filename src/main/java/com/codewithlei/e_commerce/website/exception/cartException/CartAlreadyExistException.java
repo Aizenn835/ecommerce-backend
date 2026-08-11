@@ -1,4 +1,4 @@
-package com.codewithlei.e_commerce.website.exception.CartException;
+package com.codewithlei.e_commerce.website.exception.cartException;
 
 public class CartAlreadyExistException extends RuntimeException {
     public CartAlreadyExistException(String message) {

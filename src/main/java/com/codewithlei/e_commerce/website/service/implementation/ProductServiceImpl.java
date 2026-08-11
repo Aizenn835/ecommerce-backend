@@ -2,7 +2,7 @@ package com.codewithlei.e_commerce.website.service.implementation;
 
 import com.codewithlei.e_commerce.website.dto.product.CreateProductDTO;
 import com.codewithlei.e_commerce.website.dto.product.ProductDTO;
-import com.codewithlei.e_commerce.website.exception.ProductException.ProductNotFoundException;
+import com.codewithlei.e_commerce.website.exception.productException.ProductNotFoundException;
 import com.codewithlei.e_commerce.website.mapper.ProductMapper;
 import com.codewithlei.e_commerce.website.model.entity.ProductEntity;
 import com.codewithlei.e_commerce.website.model.enums.Category;

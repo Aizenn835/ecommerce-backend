@@ -2,7 +2,7 @@ package com.codewithlei.e_commerce.website.service.implementation;
 
 
 import com.codewithlei.e_commerce.website.dto.orderHistoryDTO.ResponseHistoryDTO;
-import com.codewithlei.e_commerce.website.exception.UserException.UserNotFoundException;
+import com.codewithlei.e_commerce.website.exception.userException.UserNotFoundException;
 import com.codewithlei.e_commerce.website.model.entity.CartEntity;
 import com.codewithlei.e_commerce.website.model.entity.OrderHistoryEntity;
 import com.codewithlei.e_commerce.website.model.entity.UserEntity;

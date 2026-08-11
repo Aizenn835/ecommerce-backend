@@ -40,6 +40,11 @@ public class CartController {
         cartService.addWishlistItemToCart(authentication.getName() , id);
         return ResponseEntity.ok(Map.of("message" , "Successfully Added To Product "));
     }
+    @PostMapping("/purchase")
+    public ResponseEntity<Map<String , String>> purchaseItems(Authentication authentication){
+        cartService.purchaseCart(authentication.getName());
+        return ResponseEntity.ok(Map.of("message" , "Successfully purchase"));
+    }
     @PatchMapping("/{id}")
     public ResponseEntity<String> updateQuantity( @PathVariable("id")Long id , @RequestParam int quantity){
         cartService.updateQuantity( id , quantity);

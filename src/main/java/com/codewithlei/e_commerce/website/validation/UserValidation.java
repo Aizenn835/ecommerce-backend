@@ -1,7 +1,7 @@
 package com.codewithlei.e_commerce.website.validation;
 
 import com.codewithlei.e_commerce.website.dto.user.RequestUserDTO;
-import com.codewithlei.e_commerce.website.exception.UserException.UserAlreadyExistException;
+import com.codewithlei.e_commerce.website.exception.userException.UserAlreadyExistException;
 import com.codewithlei.e_commerce.website.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

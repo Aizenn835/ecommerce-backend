@@ -13,4 +13,5 @@ public interface CartService {
     void updateQuantity(Long id , int quantity);
     ResponseTotalPriceDTO getTotalPrice(String email);
     ResponseTotalPriceDTO getSubTotal(String email);
+    void purchaseCart(String email);
 }

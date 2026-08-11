@@ -4,10 +4,9 @@ import com.codewithlei.e_commerce.website.model.enums.DeliveryStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "order_history")

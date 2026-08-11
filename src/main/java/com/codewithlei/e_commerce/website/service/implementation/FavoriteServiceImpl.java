@@ -1,9 +1,9 @@
 package com.codewithlei.e_commerce.website.service.implementation;
 
 import com.codewithlei.e_commerce.website.dto.favorite.ResponseFavoriteDTO;
-import com.codewithlei.e_commerce.website.exception.FavoriteException.FavoriteNotFoundException;
-import com.codewithlei.e_commerce.website.exception.ProductException.ProductNotFoundException;
-import com.codewithlei.e_commerce.website.exception.UserException.UserNotFoundException;
+import com.codewithlei.e_commerce.website.exception.favoriteException.FavoriteNotFoundException;
+import com.codewithlei.e_commerce.website.exception.productException.ProductNotFoundException;
+import com.codewithlei.e_commerce.website.exception.userException.UserNotFoundException;
 import com.codewithlei.e_commerce.website.mapper.FavoriteMapper;
 import com.codewithlei.e_commerce.website.model.entity.CartEntity;
 import com.codewithlei.e_commerce.website.model.entity.FavoriteEntity;

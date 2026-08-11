@@ -2,16 +2,20 @@ package com.codewithlei.e_commerce.website.service.implementation;
 
 import com.codewithlei.e_commerce.website.dto.cart.ResponseCartDTO;
 import com.codewithlei.e_commerce.website.dto.cart.ResponseTotalPriceDTO;
-import com.codewithlei.e_commerce.website.exception.CartException.CartNotFoundException;
-import com.codewithlei.e_commerce.website.exception.ProductException.ProductNotFoundException;
-import com.codewithlei.e_commerce.website.exception.UserException.UserNotFoundException;
+import com.codewithlei.e_commerce.website.exception.cartException.CartEmptyException;
+import com.codewithlei.e_commerce.website.exception.cartException.CartNotFoundException;
+import com.codewithlei.e_commerce.website.exception.productException.ProductNotFoundException;
+import com.codewithlei.e_commerce.website.exception.userException.UserNotFoundException;
 import com.codewithlei.e_commerce.website.mapper.CartMapper;
 import com.codewithlei.e_commerce.website.model.entity.CartEntity;
+import com.codewithlei.e_commerce.website.model.entity.OrderHistoryEntity;
 import com.codewithlei.e_commerce.website.model.entity.ProductEntity;
 import com.codewithlei.e_commerce.website.model.entity.UserEntity;
 import com.codewithlei.e_commerce.website.model.enums.CartAction;
+import com.codewithlei.e_commerce.website.model.enums.DeliveryStatus;
 import com.codewithlei.e_commerce.website.model.enums.Tax;
 import com.codewithlei.e_commerce.website.repository.CartRepository;
+import com.codewithlei.e_commerce.website.repository.OrderHistoryRepository;
 import com.codewithlei.e_commerce.website.repository.ProductRepository;
 import com.codewithlei.e_commerce.website.repository.UserRepository;
 import com.codewithlei.e_commerce.website.service.CartService;
@@ -20,6 +24,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +37,8 @@ public class CartServiceImpl implements CartService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final CartMapper cartMapper;
+    private final OrderHistoryRepository orderHistoryRepository;
+
 
     @Override
     public List<ResponseCartDTO> getAllUserCart(String email) {
@@ -142,4 +150,39 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(CartNotFoundException::new);
         cartRepository.delete(cart);
     }
+    // implement this tom
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void purchaseCart(String email) {
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        List<CartEntity> cart = cartRepository.findByUser(user);
+        if(cart.isEmpty()) throw new CartEmptyException("Cart is empty");
+
+        List<OrderHistoryEntity> list = new ArrayList<>();
+
+        for(CartEntity cartList : cart){
+            BigDecimal totalPrice = getTotalPrice(cartList);
+            String head = "SWC-";
+            OrderHistoryEntity order = OrderHistoryEntity.builder()
+                    .product(cartList.getProduct())
+                    .user(cartList.getUser())
+                    .orderId(head + System.currentTimeMillis())
+                    .orderTime(LocalDate.now())
+                    .totalPrice(totalPrice)
+                    .status(DeliveryStatus.PROCESSING)
+                    .orderCount(cartList.getQuantity())
+                    .build();
+
+            list.add(order);
+        }
+        orderHistoryRepository.saveAll(list);
+        cartRepository.deleteAll(cart);
+    }
+    private BigDecimal getTotalPrice(CartEntity cartList){
+        return cartList.getProduct().getPrice()
+                .multiply(BigDecimal.valueOf(cartList.getQuantity()));
+    }
+
 }

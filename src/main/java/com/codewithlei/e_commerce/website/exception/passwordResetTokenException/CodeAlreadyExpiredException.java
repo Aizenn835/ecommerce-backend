@@ -1,4 +1,4 @@
-package com.codewithlei.e_commerce.website.exception.PasswordResetTokenException;
+package com.codewithlei.e_commerce.website.exception.passwordResetTokenException;
 
 public class CodeAlreadyExpiredException extends RuntimeException {
     public CodeAlreadyExpiredException(String message) {

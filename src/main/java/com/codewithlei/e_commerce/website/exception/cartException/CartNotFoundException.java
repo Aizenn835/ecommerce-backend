@@ -1,4 +1,4 @@
-package com.codewithlei.e_commerce.website.exception.CartException;
+package com.codewithlei.e_commerce.website.exception.cartException;
 
 public class CartNotFoundException extends RuntimeException {
     public CartNotFoundException(String message) {

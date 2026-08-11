@@ -1,7 +1,6 @@
 package com.codewithlei.e_commerce.website.validation;
 
-import com.codewithlei.e_commerce.website.exception.CartException.CartAlreadyExistException;
-import com.codewithlei.e_commerce.website.exception.CartException.CartNotFoundException;
+import com.codewithlei.e_commerce.website.exception.cartException.CartAlreadyExistException;
 import com.codewithlei.e_commerce.website.model.entity.UserEntity;
 import com.codewithlei.e_commerce.website.repository.CartRepository;
 import lombok.Data;

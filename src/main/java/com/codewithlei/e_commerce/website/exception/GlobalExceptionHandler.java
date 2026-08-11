@@ -1,14 +1,15 @@
 package com.codewithlei.e_commerce.website.exception;
 
-import com.codewithlei.e_commerce.website.exception.CartException.CartAlreadyExistException;
-import com.codewithlei.e_commerce.website.exception.CartException.CartNotFoundException;
-import com.codewithlei.e_commerce.website.exception.FavoriteException.FavoriteNotFoundException;
-import com.codewithlei.e_commerce.website.exception.PasswordResetTokenException.CodeAlreadyExpiredException;
-import com.codewithlei.e_commerce.website.exception.PasswordResetTokenException.InvalidResetRequestException;
-import com.codewithlei.e_commerce.website.exception.ProductException.ProductNotFoundException;
-import com.codewithlei.e_commerce.website.exception.UserException.UserAlreadyExistException;
-import com.codewithlei.e_commerce.website.exception.UserException.UserEmailUnavailableException;
-import com.codewithlei.e_commerce.website.exception.UserException.UserNotFoundException;
+import com.codewithlei.e_commerce.website.exception.cartException.CartAlreadyExistException;
+import com.codewithlei.e_commerce.website.exception.cartException.CartEmptyException;
+import com.codewithlei.e_commerce.website.exception.cartException.CartNotFoundException;
+import com.codewithlei.e_commerce.website.exception.favoriteException.FavoriteNotFoundException;
+import com.codewithlei.e_commerce.website.exception.orderHistoryException.OrderAlreadyExistException;
+import com.codewithlei.e_commerce.website.exception.passwordResetTokenException.InvalidResetRequestException;
+import com.codewithlei.e_commerce.website.exception.productException.ProductNotFoundException;
+import com.codewithlei.e_commerce.website.exception.userException.UserAlreadyExistException;
+import com.codewithlei.e_commerce.website.exception.userException.UserEmailUnavailableException;
+import com.codewithlei.e_commerce.website.exception.userException.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -98,5 +99,24 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(error);
     }
-
+    @ExceptionHandler(OrderAlreadyExistException.class)
+    public ResponseEntity<?> handleEmailAlreadyExist(OrderAlreadyExistException e){
+        ErrorResponse error = ErrorResponse.builder()
+                .status(409)
+                .response(e.getMessage())
+                .localDateTime(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(error);
+    }
+    @ExceptionHandler(CartEmptyException.class)
+    public ResponseEntity<?> handleEmailAlreadyExist(CartEmptyException e){
+        ErrorResponse error = ErrorResponse.builder()
+                .status(409)
+                .response(e.getMessage())
+                .localDateTime(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(error);
+    }
 }

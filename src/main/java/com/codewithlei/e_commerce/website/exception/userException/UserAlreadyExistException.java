@@ -1,4 +1,4 @@
-package com.codewithlei.e_commerce.website.exception.UserException;
+package com.codewithlei.e_commerce.website.exception.userException;
 
 public class UserAlreadyExistException extends RuntimeException {
     public UserAlreadyExistException(String message) {
