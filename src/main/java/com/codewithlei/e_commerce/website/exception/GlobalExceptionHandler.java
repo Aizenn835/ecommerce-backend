@@ -5,7 +5,9 @@ import com.codewithlei.e_commerce.website.exception.cartException.CartEmptyExcep
 import com.codewithlei.e_commerce.website.exception.cartException.CartNotFoundException;
 import com.codewithlei.e_commerce.website.exception.favoriteException.FavoriteNotFoundException;
 import com.codewithlei.e_commerce.website.exception.orderHistoryException.OrderAlreadyExistException;
+import com.codewithlei.e_commerce.website.exception.passwordResetTokenException.InvalidPasswordException;
 import com.codewithlei.e_commerce.website.exception.passwordResetTokenException.InvalidResetRequestException;
+import com.codewithlei.e_commerce.website.exception.passwordResetTokenException.SamePasswordException;
 import com.codewithlei.e_commerce.website.exception.productException.ProductNotFoundException;
 import com.codewithlei.e_commerce.website.exception.userException.UserAlreadyExistException;
 import com.codewithlei.e_commerce.website.exception.userException.UserEmailUnavailableException;
@@ -117,6 +119,26 @@ public class GlobalExceptionHandler {
                 .localDateTime(LocalDateTime.now())
                 .build();
         return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(error);
+    }
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<?> handleInvalidPasswordRequest(InvalidPasswordException e){
+        ErrorResponse error = ErrorResponse.builder()
+                .status(400)
+                .response(e.getMessage())
+                .localDateTime(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(error);
+    }
+    @ExceptionHandler(SamePasswordException.class)
+    public ResponseEntity<?> handleInvalidPasswordRequest(SamePasswordException e){
+        ErrorResponse error = ErrorResponse.builder()
+                .status(400)
+                .response(e.getMessage())
+                .localDateTime(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(error);
     }
 }

@@ -1,6 +1,7 @@
 package com.codewithlei.e_commerce.website.controller;
 
 import com.codewithlei.e_commerce.website.dto.user.ResponseViewUserInformationDTO;
+import com.codewithlei.e_commerce.website.dto.user.updatePasswordUser.RequestNewPasswordDTO;
 import com.codewithlei.e_commerce.website.dto.user.updateViewUser.RequestUpdateUserDTO;
 import com.codewithlei.e_commerce.website.service.UserService;
 import jakarta.validation.Valid;
@@ -28,5 +29,11 @@ public class ProfileSettingsController {
     @GetMapping("/view-profile")
     public ResponseViewUserInformationDTO viewProfileInfo(Authentication authentication){
         return userService.viewUserInfo(authentication.getName());
+    }
+    @PatchMapping("/change-password")
+    public ResponseEntity<Void> changePassword(Authentication authentication ,
+                                               @RequestBody RequestNewPasswordDTO request){
+        userService.changePassword(authentication.getName() , request);
+        return ResponseEntity.noContent().build();
     }
 }

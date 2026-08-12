@@ -3,9 +3,12 @@ package com.codewithlei.e_commerce.website.service.implementation;
 import com.codewithlei.e_commerce.website.dto.auth.AuthToken;
 import com.codewithlei.e_commerce.website.dto.auth.LoginRequest;
 import com.codewithlei.e_commerce.website.dto.user.ResponseViewUserInformationDTO;
+import com.codewithlei.e_commerce.website.dto.user.updatePasswordUser.RequestNewPasswordDTO;
 import com.codewithlei.e_commerce.website.dto.user.updateViewUser.RequestUpdateUserDTO;
 import com.codewithlei.e_commerce.website.dto.user.RequestUserDTO;
+import com.codewithlei.e_commerce.website.exception.passwordResetTokenException.InvalidPasswordException;
 import com.codewithlei.e_commerce.website.exception.passwordResetTokenException.InvalidResetRequestException;
+import com.codewithlei.e_commerce.website.exception.passwordResetTokenException.SamePasswordException;
 import com.codewithlei.e_commerce.website.exception.userException.UserEmailUnavailableException;
 import com.codewithlei.e_commerce.website.exception.userException.UserNotFoundException;
 import com.codewithlei.e_commerce.website.mapper.UserMapper;
@@ -22,8 +25,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+
 
 @Service
 @RequiredArgsConstructor
@@ -108,6 +113,35 @@ public class UserServiceImpl implements UserService {
                         user.getFirstname() + " " + user.getLastname(),
                         user.getEmail()))
                 .orElseThrow(UserNotFoundException::new);
+    }
+    @Override
+    public void changePassword(String email , RequestNewPasswordDTO request){
+
+        System.out.println("old: " + request.getOldPassword());
+        System.out.println("new: " + request.getNewPassword());
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        boolean isRequestValid = passwordEncoder.matches(
+                request.getOldPassword() ,
+                user.getPassword()
+        );
+
+        if(!isRequestValid){
+            throw new InvalidPasswordException("Current password is incorrect");
+        }
+
+        boolean isNewPasswordSameAsOld = passwordEncoder.matches(
+                request.getNewPassword() ,
+                user.getPassword()
+        );
+
+        if(isNewPasswordSameAsOld){
+            throw new SamePasswordException("New password must be different from current password");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
     }
 
 }
