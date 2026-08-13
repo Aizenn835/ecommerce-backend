@@ -20,12 +20,6 @@ public class OrderHistoryController {
 
     private final OrderHistoryService orderHistoryService;
 
-    @PostMapping("/purchase")
-    public ResponseEntity<Map<String , String>> purchaseItem(Authentication authentication){
-        orderHistoryService.purchaseItem(authentication.getName());
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.of("message" , "Purchased successfully!"));
-    }
     @GetMapping("/history")
     public List<ResponseHistoryDTO> orderHistory(Authentication authentication){
         return orderHistoryService.getOrderHistory(authentication.getName());

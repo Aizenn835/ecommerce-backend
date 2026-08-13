@@ -164,7 +164,7 @@ public class CartServiceImpl implements CartService {
 
         for(CartEntity cartList : cart){
             BigDecimal totalPrice = getTotalPrice(cartList);
-            String head = "SWC-";
+            final String head = "SWC-";
             OrderHistoryEntity order = OrderHistoryEntity.builder()
                     .product(cartList.getProduct())
                     .user(cartList.getUser())

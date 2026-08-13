@@ -117,8 +117,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changePassword(String email , RequestNewPasswordDTO request){
 
-        System.out.println("old: " + request.getOldPassword());
-        System.out.println("new: " + request.getNewPassword());
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 

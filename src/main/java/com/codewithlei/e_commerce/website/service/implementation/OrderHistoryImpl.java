@@ -27,39 +27,7 @@ public class OrderHistoryImpl implements OrderHistoryService {
     private final OrderHistoryRepository orderHistoryRepository;
     private final CartRepository cartRepository;
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void purchaseItem(String email){
-        UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(UserNotFoundException::new);
 
-        String orderId = "SWC-" + System.currentTimeMillis();
-
-        List<OrderHistoryEntity> orderList = new ArrayList<>();
-
-        List<CartEntity> cartItems = cartRepository
-                .findByUser_Email(user.getEmail());
-
-        cartItems.forEach(cart -> {
-
-            BigDecimal totalPrice = cart.getProduct().getPrice()
-                    .multiply(BigDecimal.valueOf(cart.getQuantity()));
-
-            OrderHistoryEntity order = OrderHistoryEntity.builder()
-                    .product(cart.getProduct())
-                    .user(cart.getUser())
-                    .orderId(orderId)
-                    .orderTime(LocalDate.now())
-                    .totalPrice(totalPrice)
-                    .status(DeliveryStatus.PROCESSING)
-                    .orderCount(cart.getQuantity())
-                    .build();
-
-            orderList.add(order);
-            cartRepository.deleteAll(cartItems);
-        });
-        orderHistoryRepository.saveAll(orderList);
-    }
     @Override
     public List<ResponseHistoryDTO> getOrderHistory(String email){
         UserEntity user = userRepository.findByEmail(email)
