@@ -11,7 +11,6 @@ public interface CartService {
     void deleteToCart(String email , Long productId);
     List<ResponseCartDTO> getAllUserCart(String email);
     void updateQuantity(Long id , int quantity);
-    ResponseTotalPriceDTO getTotalPrice(String email);
-    ResponseTotalPriceDTO getSubTotal(String email);
     void purchaseCart(String email);
+    ResponseTotalPriceDTO getTotalSummary(String email , String shippingMethod);
 }

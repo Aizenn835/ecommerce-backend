@@ -4,6 +4,7 @@ import com.codewithlei.e_commerce.website.dto.cart.RequestCartDTO;
 import com.codewithlei.e_commerce.website.dto.cart.ResponseCartDTO;
 import com.codewithlei.e_commerce.website.dto.cart.ResponseTotalPriceDTO;
 import com.codewithlei.e_commerce.website.service.CartService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,17 +19,14 @@ import java.util.Map;
 public class CartController {
     private final CartService cartService;
 
-    @GetMapping("/total-price")
-    public ResponseTotalPriceDTO getTotalPrice(Authentication authentication){
-        return cartService.getTotalPrice(authentication.getName());
-    }
-    @GetMapping("/sub-total")
-    public ResponseTotalPriceDTO getSubTotal(Authentication authentication){
-        return cartService.getSubTotal(authentication.getName());
-    }
     @GetMapping("/all-cart")
     public List<ResponseCartDTO> getCartList(Authentication authentication){
         return cartService.getAllUserCart(authentication.getName());
+    }
+    @GetMapping("/summary")
+    public ResponseTotalPriceDTO getSummary(Authentication authentication ,
+                                            @RequestParam String shippingMethod){
+        return cartService.getTotalSummary(authentication.getName() , shippingMethod);
     }
     @PostMapping("/add-cart")
     public ResponseEntity<Map<String , String>> addToCart(Authentication authentication, @RequestBody RequestCartDTO request){

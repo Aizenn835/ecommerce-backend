@@ -41,8 +41,10 @@ public class OrderHistoryEntity {
     @Column(name = "delivery_status")
     private DeliveryStatus status;
 
+
     @Column(nullable = false)
     private Integer orderCount;
+
 
 
 

@@ -13,7 +13,7 @@ public class CartMapper {
                 .id(cart.getId())
                 .productId(cart.getProduct().getId())
                 .productName(cart.getProduct().getProductName())
-                .price(cart.getProduct().getPrice().multiply(BigDecimal.valueOf(cart.getQuantity())).add(BigDecimal.valueOf(7.65)))
+                .price(cart.getProduct().getPrice().multiply(BigDecimal.valueOf(cart.getQuantity())))
                 .imgUrl(cart.getProduct().getImgUrl())
                 .quantity(cart.getQuantity())
                 .category(cart.getProduct().getCategory())
