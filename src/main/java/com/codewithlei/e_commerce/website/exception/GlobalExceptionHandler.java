@@ -113,13 +113,13 @@ public class GlobalExceptionHandler {
                 .body(error);
     }
     @ExceptionHandler(CartEmptyException.class)
-    public ResponseEntity<?> handleEmailAlreadyExist(CartEmptyException e){
+    public ResponseEntity<?> handleCartNotFound(CartEmptyException e){
         ErrorResponse error = ErrorResponse.builder()
-                .status(409)
+                .status(404)
                 .response(e.getMessage())
                 .localDateTime(LocalDateTime.now())
                 .build();
-        return ResponseEntity.status(HttpStatus.CONFLICT)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(error);
     }
     @ExceptionHandler(InvalidPasswordException.class)

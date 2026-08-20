@@ -2,6 +2,9 @@ package com.codewithlei.e_commerce.website.service.implementation;
 
 import com.codewithlei.e_commerce.website.dto.cart.ResponseCartDTO;
 import com.codewithlei.e_commerce.website.dto.cart.ResponseTotalPriceDTO;
+import com.codewithlei.e_commerce.website.dto.email.SuccessPurchaseDTO;
+import com.codewithlei.e_commerce.website.dto.orderHistoryDTO.OrderItemResponse;
+import com.codewithlei.e_commerce.website.dto.orderHistoryDTO.ResponseOrderConfirmationDTO;
 import com.codewithlei.e_commerce.website.exception.cartException.CartEmptyException;
 import com.codewithlei.e_commerce.website.exception.cartException.CartNotFoundException;
 import com.codewithlei.e_commerce.website.exception.cartException.InvalidShippingFeeException;
@@ -19,16 +22,21 @@ import com.codewithlei.e_commerce.website.repository.OrderHistoryRepository;
 import com.codewithlei.e_commerce.website.repository.ProductRepository;
 import com.codewithlei.e_commerce.website.repository.UserRepository;
 import com.codewithlei.e_commerce.website.service.CartService;
+import com.codewithlei.e_commerce.website.service.EmailService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
+import java.security.SecureRandom;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Primary
@@ -37,7 +45,9 @@ public class CartServiceImpl implements CartService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final CartMapper cartMapper;
+    private final SecureRandom secureRandom = new SecureRandom();
     private final OrderHistoryRepository orderHistoryRepository;
+    private final EmailService emailService;
 
 
     @Override
@@ -145,38 +155,73 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(CartNotFoundException::new);
         cartRepository.delete(cart);
     }
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void purchaseCart(String email) {
+    public ResponseOrderConfirmationDTO purchaseCart(String email){
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
-
-        List<CartEntity> cart = cartRepository.findByUser(user);
-        if(cart.isEmpty()) throw new CartEmptyException("Cart is empty");
-
-        List<OrderHistoryEntity> list = new ArrayList<>();
-
-        for(CartEntity cartList : cart){
-            BigDecimal totalPrice = getTotalPrice(cartList);
-            final String head = "SWC-";
-            OrderHistoryEntity order = OrderHistoryEntity.builder()
-                    .product(cartList.getProduct())
-                    .user(cartList.getUser())
-                    .orderId(head + System.currentTimeMillis())
-                    .orderTime(LocalDate.now())
-                    .totalPrice(totalPrice)
-                    .status(DeliveryStatus.PROCESSING)
-                    .orderCount(cartList.getQuantity())
-                    .build();
-
-            list.add(order);
+        List<CartEntity> cartItems = cartRepository.findByUser(user);
+        if(cartItems.isEmpty()){
+            throw new CartEmptyException("User cart is empty");
         }
-        orderHistoryRepository.saveAll(list);
-        cartRepository.deleteAll(cart);
+        String orderNumber = "ORD-" + generateCode();
+        LocalDate orderDate = LocalDate.now();
+        List<OrderItemResponse> itemResponses = cartItems
+                .stream()
+                .map(cart -> {
+                    String orderId = "SWC-" + System.currentTimeMillis();
+                    BigDecimal lineTotal = cart.getProduct().getPrice()
+                                    .multiply(BigDecimal.valueOf(cart.getQuantity()));
+                    OrderHistoryEntity order = OrderHistoryEntity.builder()
+                            .orderNumber(orderNumber)
+                            .product(cart.getProduct())
+                            .user(cart.getUser())
+                            .orderId(orderId)
+                            .orderDate(orderDate)
+                            .totalPrice(lineTotal)
+                            .status(DeliveryStatus.PROCESSING)
+                            .orderCount(cart.getQuantity())
+                            .build();
+
+                    orderHistoryRepository.save(order);
+
+                    return OrderItemResponse.builder()
+                            .imgUrl(cart.getProduct().getImgUrl())
+                            .productName(cart.getProduct().getProductName())
+                            .quantity(cart.getQuantity())
+                            .productPrice(lineTotal)
+                            .build();
+                }).toList();
+
+        BigDecimal totalPaid = itemResponses.stream()
+                        .map(OrderItemResponse::getProductPrice)
+                        .reduce(BigDecimal.ZERO , BigDecimal::add);
+
+        cartRepository.deleteAll(cartItems);
+
+        SuccessPurchaseDTO info = SuccessPurchaseDTO.builder()
+                .username(user.getUsername())
+                .orderNumber(orderNumber)
+                .orderDate(LocalDate.now())
+                .estTime(orderDate.plusDays(5))
+                .totalPaid(totalPaid)
+                .status(DeliveryStatus.PROCESSING)
+                .build();
+
+        emailService.sendPurchaseSuccess(user.getEmail() , info);
+
+        return ResponseOrderConfirmationDTO.builder()
+                .orderNumber(orderNumber)
+                .estTime(orderDate.plusDays(5))
+                .totalPaid(totalPaid)
+                .status(DeliveryStatus.PROCESSING)
+                .orderItems(itemResponses)
+                .build();
+
     }
-    private BigDecimal getTotalPrice(CartEntity cartList){
-        return cartList.getProduct().getPrice()
-                .multiply(BigDecimal.valueOf(cartList.getQuantity()));
+    public int generateCode(){
+        return 1000 + secureRandom.nextInt(9000);
     }
+
+
+
 
 }

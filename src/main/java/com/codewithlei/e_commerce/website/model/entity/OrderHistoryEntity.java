@@ -20,6 +20,8 @@ public class OrderHistoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String orderNumber;
     @ManyToOne()
     @JoinColumn(name = "product_id")
     private ProductEntity product;
@@ -31,8 +33,8 @@ public class OrderHistoryEntity {
     @Column(nullable = false)
     private String orderId;
 
-    @JsonFormat(pattern = "MM/dd/yyyy HH:mm")
-    private LocalDate orderTime;
+    @JsonFormat(pattern = "MM/dd/yyyy")
+    private LocalDate orderDate;
 
     @Column(nullable = false)
     private BigDecimal totalPrice;
@@ -40,7 +42,6 @@ public class OrderHistoryEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "delivery_status")
     private DeliveryStatus status;
-
 
     @Column(nullable = false)
     private Integer orderCount;

@@ -1,5 +1,6 @@
 package com.codewithlei.e_commerce.website.service.implementation;
 
+import com.codewithlei.e_commerce.website.dto.email.SuccessPurchaseDTO;
 import com.codewithlei.e_commerce.website.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -56,6 +57,42 @@ public class EmailServiceImpl implements EmailService {
                 "Thank you for helping us keep your account safe.\n\n" +
                 "Stay secure!\n" +
                 "The SwiftCart Team");
+        mailSender.send(mail);
+    }
+    @Override
+    @Async
+    public void sendPurchaseSuccess(String email , SuccessPurchaseDTO request){
+        String emailBody = """
+        Hi %s,
+
+        Thank you for shopping with SwiftCart! 🎉
+
+        Your order has been confirmed and is now being processed.
+
+        Order Number: %s
+        Order Date: %s
+        Estimated Delivery: %s
+        Total Paid: ₱%s
+        Status: %s
+
+        We'll notify you again once your order ships.
+
+        Thanks for trusting SwiftCart with your purchase — we hope you love it!
+
+        Warm regards,
+        The SwiftCart Team
+        """.formatted(
+                request.getUsername(),
+                request.getOrderNumber(),
+                request.getOrderDate(),
+                request.getEstTime(),
+                request.getTotalPaid(),
+                request.getStatus()
+        );
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(email);
+        mail.setSubject("Your SwiftCart Order is Confirmed! 🎉");
+        mail.setText(emailBody);
         mailSender.send(mail);
     }
 }

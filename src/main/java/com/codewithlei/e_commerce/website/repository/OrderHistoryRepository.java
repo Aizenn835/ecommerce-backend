@@ -7,5 +7,5 @@ import java.util.List;
 
 
 public interface OrderHistoryRepository extends JpaRepository<OrderHistoryEntity , Long > {
-    List<OrderHistoryEntity> findByUserOrderByOrderTimeAsc(UserEntity user);
+    List<OrderHistoryEntity> findByUserOrderByOrderDateAsc(UserEntity user);
 }
