@@ -34,6 +34,8 @@ public class UserEntity {
     private Long number;
     @Column(nullable = false)
     private Boolean oauthAccount;
+    @Column(name = "profile_picture")
+    private String pfpUrl;
     @Enumerated(EnumType.STRING)
     private Roles role;
 }

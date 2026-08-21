@@ -6,8 +6,10 @@ import com.codewithlei.e_commerce.website.dto.user.ResponseViewUserInformationDT
 import com.codewithlei.e_commerce.website.dto.user.updatePasswordUser.RequestNewPasswordDTO;
 import com.codewithlei.e_commerce.website.dto.user.updateViewUser.RequestUpdateUserDTO;
 import com.codewithlei.e_commerce.website.dto.user.RequestUserDTO;
-import com.codewithlei.e_commerce.website.dto.user.updateViewUser.ResponseUpdateUserDTO;
+import com.codewithlei.e_commerce.website.dto.user.updateViewUser.ResponseUpdatePfpDTO;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 
 @Component
 public interface UserService {
@@ -17,4 +19,5 @@ public interface UserService {
     void updateInfo(String email , RequestUpdateUserDTO  request);
     ResponseViewUserInformationDTO viewUserInfo(String email);
     void changePassword(String email , RequestNewPasswordDTO request);
+    ResponseUpdatePfpDTO changePfp(String email , MultipartFile file) throws IOException;
 }

@@ -5,5 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface ImageLocalService {
-    String imageUpload(MultipartFile file)throws IOException;
+    String imageUpload(MultipartFile file , String subDirectory)throws IOException;
+    void deleteImage(String imageUrl) throws IOException;
 }

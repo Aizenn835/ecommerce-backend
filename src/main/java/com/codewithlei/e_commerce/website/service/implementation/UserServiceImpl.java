@@ -6,6 +6,7 @@ import com.codewithlei.e_commerce.website.dto.user.ResponseViewUserInformationDT
 import com.codewithlei.e_commerce.website.dto.user.updatePasswordUser.RequestNewPasswordDTO;
 import com.codewithlei.e_commerce.website.dto.user.updateViewUser.RequestUpdateUserDTO;
 import com.codewithlei.e_commerce.website.dto.user.RequestUserDTO;
+import com.codewithlei.e_commerce.website.dto.user.updateViewUser.ResponseUpdatePfpDTO;
 import com.codewithlei.e_commerce.website.exception.passwordResetTokenException.InvalidPasswordException;
 import com.codewithlei.e_commerce.website.exception.passwordResetTokenException.InvalidResetRequestException;
 import com.codewithlei.e_commerce.website.exception.passwordResetTokenException.SamePasswordException;
@@ -17,7 +18,9 @@ import com.codewithlei.e_commerce.website.repository.PasswordResetTokenRepositor
 import com.codewithlei.e_commerce.website.repository.UserRepository;
 import com.codewithlei.e_commerce.website.security.JwtService;
 import com.codewithlei.e_commerce.website.service.EmailService;
+import com.codewithlei.e_commerce.website.service.ImageLocalService;
 import com.codewithlei.e_commerce.website.service.UserService;
+import com.codewithlei.e_commerce.website.validation.ProductValidation;
 import com.codewithlei.e_commerce.website.validation.UserValidation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -25,8 +28,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 
@@ -42,6 +46,8 @@ public class UserServiceImpl implements UserService {
     private final UserValidation userValidation;
     private final EmailService emailService;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final ImageLocalService imageService;
+    private final ProductValidation productValidation;
 
     @Override
     public void register(RequestUserDTO dto) {
@@ -141,5 +147,21 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
     }
+    @Override
+    public ResponseUpdatePfpDTO changePfp(String email , MultipartFile img) throws IOException {
+        productValidation.validateImg(img); // make a validation for a user pfp
+        UserEntity currentUser = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
 
+        String currentPfp = currentUser.getPfpUrl();
+
+        String updatePfp = imageService.imageUpload(img , "profile-photos");
+        currentUser.setPfpUrl(updatePfp);
+        UserEntity updated = userRepository.save(currentUser);
+
+        if(currentPfp != null){
+            imageService.deleteImage(currentPfp);
+        }
+        return new ResponseUpdatePfpDTO(updated.getPfpUrl());
+    }
 }

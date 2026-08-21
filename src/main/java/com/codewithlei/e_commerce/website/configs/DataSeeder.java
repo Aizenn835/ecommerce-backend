@@ -21,9 +21,9 @@ public class DataSeeder implements CommandLineRunner {
         seedProduct();
     }
     public void seedProduct(){
-       if(productRepository.count() > 0){
-           return;
-       }
+        if(productRepository.count() > 0){
+            return;
+        }
         List<ProductEntity> products = List.of(
 
                 ProductEntity.builder()
@@ -35,7 +35,7 @@ public class DataSeeder implements CommandLineRunner {
                         .numberOfSold(124)
                         .stock(25)
                         .productSize("Medium")
-                        .imgUrl("/uploads/bag.avif")
+                        .imgUrl("/uploads/product-photos/bag.avif")
                         .build(),
 
                 ProductEntity.builder()
@@ -47,7 +47,7 @@ public class DataSeeder implements CommandLineRunner {
                         .numberOfSold(310)
                         .stock(80)
                         .productSize("350ml")
-                        .imgUrl("/uploads/cafe-mug.avif")
+                        .imgUrl("/uploads/product-photos/cafe-mug.avif")
                         .build(),
 
                 ProductEntity.builder()
@@ -59,7 +59,7 @@ public class DataSeeder implements CommandLineRunner {
                         .numberOfSold(87)
                         .stock(35)
                         .productSize("Large")
-                        .imgUrl("/uploads/formal-shirt.avif")
+                        .imgUrl("/uploads/product-photos/formal-shirt.avif")
                         .build(),
 
                 ProductEntity.builder()
@@ -71,7 +71,7 @@ public class DataSeeder implements CommandLineRunner {
                         .numberOfSold(54)
                         .stock(20)
                         .productSize("Large")
-                        .imgUrl("/uploads/jacket.avif")
+                        .imgUrl("/uploads/product-photos/jacket.avif")
                         .build(),
 
                 ProductEntity.builder()
@@ -83,7 +83,7 @@ public class DataSeeder implements CommandLineRunner {
                         .numberOfSold(212)
                         .stock(65)
                         .productSize("Medium")
-                        .imgUrl("/uploads/non-formal-shirt.avif")
+                        .imgUrl("/uploads/product-photos/non-formal-shirt.avif")
                         .build(),
 
                 ProductEntity.builder()
@@ -95,7 +95,7 @@ public class DataSeeder implements CommandLineRunner {
                         .numberOfSold(41)
                         .stock(30)
                         .productSize("One Size")
-                        .imgUrl("/uploads/scarf.avif")
+                        .imgUrl("/uploads/product-photos/scarf.avif")
                         .build(),
 
                 ProductEntity.builder()
@@ -107,7 +107,7 @@ public class DataSeeder implements CommandLineRunner {
                         .numberOfSold(173)
                         .stock(40)
                         .productSize("42")
-                        .imgUrl("/uploads/shoes.avif")
+                        .imgUrl("/uploads/product-photos/shoes.avif")
                         .build(),
 
                 ProductEntity.builder()
@@ -119,7 +119,7 @@ public class DataSeeder implements CommandLineRunner {
                         .numberOfSold(91)
                         .stock(18)
                         .productSize("42mm")
-                        .imgUrl("/uploads/smart-watch.avif")
+                        .imgUrl("/uploads/product-photos/smart-watch.avif")
                         .build(),
 
                 ProductEntity.builder()
@@ -131,7 +131,7 @@ public class DataSeeder implements CommandLineRunner {
                         .numberOfSold(145)
                         .stock(50)
                         .productSize("Standard")
-                        .imgUrl("/uploads/sunglasses.avif")
+                        .imgUrl("/uploads/product-photos/sunglasses.avif")
                         .build(),
 
                 ProductEntity.builder()
@@ -143,7 +143,7 @@ public class DataSeeder implements CommandLineRunner {
                         .numberOfSold(63)
                         .stock(45)
                         .productSize("3 Pieces")
-                        .imgUrl("/uploads/three-glass.avif")
+                        .imgUrl("/uploads/product-photos/three-glass.avif")
                         .build()
 
         );

@@ -53,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO create(CreateProductDTO dto , MultipartFile file)throws IOException {
         productValidation.validateImg(file);
-        String image = imageService.imageUpload(file);
+        String image = imageService.imageUpload(file , "product-photos");
         ProductEntity product = productMapper.mapToEntity(dto, image);
         ProductEntity saved = productRepository.save(product);
         return productMapper.mapToDTO(saved);
@@ -62,7 +62,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO update(Long id , CreateProductDTO dto , MultipartFile file)throws IOException{
         ProductEntity product = productRepository.findById(id)
                 .orElseThrow(ProductNotFoundException::new);
-        String image = imageService.imageUpload(file);
+        String image = imageService.imageUpload(file , "product-photos");
         ProductEntity updated = productMapper.updateToMapEntity(product , dto , image);
         return productMapper.mapToDTO(productRepository.save(updated));
     }
