@@ -19,13 +19,16 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final String frontendUrl;
+    private final String defaultPfp;
 
     public OAuth2SuccessHandler(UserRepository userRepository ,
                                 JwtService jwtService,
-                                @Value("${app.frontend.url}") String frontendUrl){
+                                @Value("${app.frontend.url}") String frontendUrl,
+                                @Value("${app.default.pfp}") String defaultPfp){
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.frontendUrl = frontendUrl;
+        this.defaultPfp = defaultPfp;
     }
 
     @Override
@@ -49,6 +52,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                             .password("")
                             .oauthAccount(true)
                             .role(Roles.USER)
+                            .pfpUrl(defaultPfp)
                             .build();
                     return userRepository.save(newUser);
                 });

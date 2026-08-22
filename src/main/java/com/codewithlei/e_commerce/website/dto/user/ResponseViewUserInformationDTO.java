@@ -12,4 +12,5 @@ import lombok.Setter;
 public class ResponseViewUserInformationDTO {
     public String fullName;
     public String email;
+    public String pfpUrl;
 }

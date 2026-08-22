@@ -22,7 +22,7 @@ import com.codewithlei.e_commerce.website.service.ImageLocalService;
 import com.codewithlei.e_commerce.website.service.UserService;
 import com.codewithlei.e_commerce.website.validation.ProductValidation;
 import com.codewithlei.e_commerce.website.validation.UserValidation;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,7 +35,6 @@ import java.time.LocalDateTime;
 
 
 @Service
-@RequiredArgsConstructor
 @Primary
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -48,11 +47,32 @@ public class UserServiceImpl implements UserService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final ImageLocalService imageService;
     private final ProductValidation productValidation;
+    private final String defaultPfp;
+
+    public UserServiceImpl(AuthenticationManager authenticationManager,
+                          @Value("${app.default.pfp}") String defaultPfp, EmailService emailService,
+                           ImageLocalService imageService, JwtService jwtService,
+                           PasswordEncoder passwordEncoder, PasswordResetTokenRepository passwordResetTokenRepository,
+                           ProductValidation productValidation, UserMapper userMapper,
+                           UserRepository userRepository, UserValidation userValidation) {
+        this.authenticationManager = authenticationManager;
+        this.defaultPfp = defaultPfp;
+        this.emailService = emailService;
+        this.imageService = imageService;
+        this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
+        this.productValidation = productValidation;
+        this.userMapper = userMapper;
+        this.userRepository = userRepository;
+        this.userValidation = userValidation;
+    }
 
     @Override
-    public void register(RequestUserDTO dto) {
+    public void register(RequestUserDTO dto ) {
         userValidation.validateUser(dto);
         UserEntity user = userMapper.mapToEntity(dto);
+        user.setPfpUrl(defaultPfp);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         emailService.sendRegisterNotification(dto.getEmail(), dto.getUsername());
@@ -117,7 +137,8 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email)
                 .map(user -> new ResponseViewUserInformationDTO(
                         user.getFirstname() + " " + user.getLastname(),
-                        user.getEmail()))
+                        user.getEmail(),
+                        user.getPfpUrl()))
                 .orElseThrow(UserNotFoundException::new);
     }
     @Override
@@ -159,9 +180,10 @@ public class UserServiceImpl implements UserService {
         currentUser.setPfpUrl(updatePfp);
         UserEntity updated = userRepository.save(currentUser);
 
-        if(currentPfp != null){
+        if(currentPfp != null && !currentPfp.equals(defaultPfp) ){
             imageService.deleteImage(currentPfp);
         }
+
         return new ResponseUpdatePfpDTO(updated.getPfpUrl());
     }
 }
