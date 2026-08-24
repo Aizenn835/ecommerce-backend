@@ -9,6 +9,7 @@ import com.codewithlei.e_commerce.website.exception.orderHistoryException.OrderA
 import com.codewithlei.e_commerce.website.exception.passwordResetTokenException.InvalidPasswordException;
 import com.codewithlei.e_commerce.website.exception.passwordResetTokenException.InvalidResetRequestException;
 import com.codewithlei.e_commerce.website.exception.passwordResetTokenException.SamePasswordException;
+import com.codewithlei.e_commerce.website.exception.paymentException.PaymentMethodAlreadyExistException;
 import com.codewithlei.e_commerce.website.exception.productException.ProductNotFoundException;
 import com.codewithlei.e_commerce.website.exception.userException.UserAlreadyExistException;
 import com.codewithlei.e_commerce.website.exception.userException.UserEmailUnavailableException;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -150,6 +152,16 @@ public class GlobalExceptionHandler {
                 .localDateTime(LocalDateTime.now())
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(error);
+    }
+    @ExceptionHandler(PaymentMethodAlreadyExistException.class)
+    public ResponseEntity<?> handlePaymentAlreadyExist(PaymentMethodAlreadyExistException e){
+        ErrorResponse error = ErrorResponse.builder()
+                .status(409)
+                .response(e.getMessage())
+                .localDateTime(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(error);
     }
 }

@@ -2,13 +2,14 @@ package com.codewithlei.e_commerce.website.controller;
 
 import com.codewithlei.e_commerce.website.dto.address.RequestAddressDTO;
 import com.codewithlei.e_commerce.website.dto.address.ResponseAddressDTO;
+import com.codewithlei.e_commerce.website.dto.payment.RequestPaymentDTO;
+import com.codewithlei.e_commerce.website.dto.payment.ResponsePaymentDTO;
 import com.codewithlei.e_commerce.website.dto.user.ResponseViewUserInformationDTO;
 import com.codewithlei.e_commerce.website.dto.user.updatePasswordUser.RequestNewPasswordDTO;
 import com.codewithlei.e_commerce.website.dto.user.updateViewUser.RequestUpdateUserDTO;
 import com.codewithlei.e_commerce.website.dto.user.updateViewUser.ResponseUpdatePfpDTO;
-import com.codewithlei.e_commerce.website.model.entity.AddressEntity;
-import com.codewithlei.e_commerce.website.repository.AddressRepository;
 import com.codewithlei.e_commerce.website.service.AddressService;
+import com.codewithlei.e_commerce.website.service.PaymentService;
 import com.codewithlei.e_commerce.website.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -31,6 +30,7 @@ public class ProfileSettingsController {
 
     private final UserService userService;
     private final AddressService addressService;
+    private final PaymentService paymentService;
 
     @PutMapping("/profile")
     public ResponseEntity<Map<String , String>> updateProfile(Authentication authentication ,
@@ -59,6 +59,13 @@ public class ProfileSettingsController {
         String user = authentication.getName();
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(addressService.addAddress(user, request));
+    }
+    @PostMapping("/add-payment")
+    public ResponseEntity<ResponsePaymentDTO> addPayment(Authentication authentication ,
+                                                         @RequestBody @Valid RequestPaymentDTO request){
+        String user = authentication.getName();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(paymentService.addPaymentMethod(user , request));
     }
 
 }
