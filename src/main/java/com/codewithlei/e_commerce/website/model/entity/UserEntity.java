@@ -40,11 +40,10 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private Roles role;
 
-    @OneToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "home_address")
-    private AddressEntity address;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY , cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AddressEntity> address;
 
-    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user" , fetch = FetchType.LAZY , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PaymentEntity> payment;
 
 }

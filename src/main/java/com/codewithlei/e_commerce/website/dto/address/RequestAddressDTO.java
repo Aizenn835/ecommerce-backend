@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 @Builder
 public class RequestAddressDTO {
+    private String fullName;
     private String street;
     private String city;
     private String state;

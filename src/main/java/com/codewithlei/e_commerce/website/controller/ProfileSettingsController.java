@@ -20,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -53,12 +54,18 @@ public class ProfileSettingsController {
                                                           @RequestParam("file") MultipartFile file) throws IOException {
         return ResponseEntity.ok(userService.changePfp(authentication.getName() , file));
     }
+    @GetMapping("/view-address")
+    public List<ResponseAddressDTO> viewUserAddress(Authentication authentication){
+        String user = authentication.getName();
+        return addressService.showAllAddress(user);
+    }
     @PostMapping("/add-address")
-    public ResponseEntity<ResponseAddressDTO> addAddress(Authentication authentication ,
+    public ResponseEntity<Map<String , String>> addAddress(Authentication authentication ,
                                                          @RequestBody RequestAddressDTO request) {
         String user = authentication.getName();
+        addressService.addAddress(user , request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(addressService.addAddress(user, request));
+                .body(Map.of("message" , "Saved!"));
     }
     @PostMapping("/add-payment")
     public ResponseEntity<ResponsePaymentDTO> addPayment(Authentication authentication ,
