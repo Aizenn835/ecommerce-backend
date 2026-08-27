@@ -10,4 +10,10 @@ import java.util.List;
 @Repository
 public interface AddressRepository extends JpaRepository<AddressEntity , Long > {
     List<AddressEntity> findByUser(UserEntity user);
+    boolean existsByUser_IdAndFullNameAndCityAndZipCodeAndStreetAndState(Long userId,
+                                                                 String fullName,
+                                                                 String city,
+                                                                 String zipCode,
+                                                                 String street,
+                                                                 String state);
 }

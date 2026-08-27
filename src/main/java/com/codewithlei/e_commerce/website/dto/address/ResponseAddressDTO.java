@@ -8,6 +8,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class ResponseAddressDTO {
+    private String fullName;
     private String address;
 
     public static String format(AddressEntity address){

@@ -1,5 +1,6 @@
 package com.codewithlei.e_commerce.website.exception;
 
+import com.codewithlei.e_commerce.website.exception.addressException.AddressAlreadyExistException;
 import com.codewithlei.e_commerce.website.exception.cartException.CartAlreadyExistException;
 import com.codewithlei.e_commerce.website.exception.cartException.CartEmptyException;
 import com.codewithlei.e_commerce.website.exception.cartException.CartNotFoundException;
@@ -156,6 +157,16 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(PaymentMethodAlreadyExistException.class)
     public ResponseEntity<?> handlePaymentAlreadyExist(PaymentMethodAlreadyExistException e){
+        ErrorResponse error = ErrorResponse.builder()
+                .status(409)
+                .response(e.getMessage())
+                .localDateTime(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(error);
+    }
+    @ExceptionHandler(AddressAlreadyExistException.class)
+    public ResponseEntity<?> handleAddressAlreadyExist(AddressAlreadyExistException e){
         ErrorResponse error = ErrorResponse.builder()
                 .status(409)
                 .response(e.getMessage())
