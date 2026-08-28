@@ -56,23 +56,28 @@ public class ProfileSettingsController {
     }
     @GetMapping("/view-address")
     public List<ResponseAddressDTO> viewUserAddress(Authentication authentication){
-        String user = authentication.getName();
-        return addressService.showAllAddress(user);
+        String email = authentication.getName();
+        return addressService.showAllAddress(email);
+    }
+    @GetMapping("/default-address")
+    public ResponseAddressDTO currentDefaultAddress(Authentication authentication){
+        String email = authentication.getName();
+        return addressService.showDefaultAddress(email);
     }
     @PostMapping("/add-address")
     public ResponseEntity<Map<String , String>> addAddress(Authentication authentication ,
                                                          @RequestBody RequestAddressDTO request) {
-        String user = authentication.getName();
-        addressService.addAddress(user , request);
+        String email = authentication.getName();
+        addressService.addAddress(email , request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Map.of("message" , "Saved!"));
     }
     @PostMapping("/add-payment")
     public ResponseEntity<ResponsePaymentDTO> addPayment(Authentication authentication ,
                                                          @RequestBody @Valid RequestPaymentDTO request){
-        String user = authentication.getName();
+        String email = authentication.getName();
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(paymentService.addPaymentMethod(user , request));
+                .body(paymentService.addPaymentMethod(email , request));
     }
 
 }

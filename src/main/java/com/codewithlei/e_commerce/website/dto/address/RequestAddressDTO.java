@@ -19,4 +19,6 @@ public class RequestAddressDTO {
     private String state;
     @NotBlank(message = "zipCode is required")
     private String zipCode;
+    private Boolean isDefault;
+
 }

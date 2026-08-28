@@ -10,6 +10,7 @@ import lombok.Data;
 public class ResponseAddressDTO {
     private String fullName;
     private String address;
+    private Boolean isDefault;
 
     public static String format(AddressEntity address){
         return address.getStreet() + ", " + address.getCity()

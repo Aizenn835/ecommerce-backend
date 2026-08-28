@@ -32,17 +32,19 @@ public class AddressServiceImpl implements AddressService {
        UserEntity user = userRepository.findByEmail(email)
                .orElseThrow(UserNotFoundException::new);
 
-       if(addressValidation.addressAlreadyExists(user.getId() , request)){
+       if(addressValidation.addressAlreadyExists(user.getId() , request)) {
            throw new AddressAlreadyExistException("Address Already Existed!");
        }
-
+       if(request.getIsDefault()){
+           addressRepository.clearDefaultAddress(user);
+       }
        AddressEntity address = AddressEntity.builder()
                .fullName(request.getFullName())
                .street(request.getStreet().trim())
                .city(request.getCity())
                .state(request.getState())
                .zipCode(request.getZipCode())
-               .isDefault(false)
+               .isDefault(request.getIsDefault())
                .user(user)
                .build();
 
@@ -55,9 +57,23 @@ public class AddressServiceImpl implements AddressService {
 
        List<AddressEntity> userAddress = addressRepository.findByUser(user);
 
+
        return userAddress.stream()
-                .map(address -> new ResponseAddressDTO(address.getFullName() ,format(address)))
+                .map(address -> new ResponseAddressDTO(address.getFullName() ,format(address) , address.getIsDefault()))
                 .toList();
     }
+    @Override
+    public ResponseAddressDTO showDefaultAddress(String email){
+       UserEntity user = userRepository.findByEmail(email)
+               .orElseThrow(UserNotFoundException::new);
+
+        AddressEntity userAddress = addressRepository.findByUserAndIsDefault(user , true);
+        return new ResponseAddressDTO(userAddress.getFullName() ,
+                                      format(userAddress) ,
+                                      userAddress.getIsDefault());
+
+
+    }
+
 
 }
