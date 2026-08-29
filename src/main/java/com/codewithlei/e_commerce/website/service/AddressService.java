@@ -9,5 +9,6 @@ public interface AddressService {
     void addAddress(String email , RequestAddressDTO request);
     List<ResponseAddressDTO> showAllAddress(String email);
     ResponseAddressDTO showDefaultAddress(String email);
+    void deleteAddress(String email , Long id);
 
 }

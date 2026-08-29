@@ -1,6 +1,7 @@
 package com.codewithlei.e_commerce.website.exception;
 
 import com.codewithlei.e_commerce.website.exception.addressException.AddressAlreadyExistException;
+import com.codewithlei.e_commerce.website.exception.addressException.AddressNotFoundException;
 import com.codewithlei.e_commerce.website.exception.cartException.CartAlreadyExistException;
 import com.codewithlei.e_commerce.website.exception.cartException.CartEmptyException;
 import com.codewithlei.e_commerce.website.exception.cartException.CartNotFoundException;
@@ -175,4 +176,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(error);
     }
+    @ExceptionHandler(AddressNotFoundException.class)
+    public ResponseEntity<?> handleAddressDoesNotExist(AddressNotFoundException e){
+        ErrorResponse error = ErrorResponse.builder()
+                .status(404)
+                .response(e.getMessage())
+                .localDateTime(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
 }

@@ -3,6 +3,7 @@ package com.codewithlei.e_commerce.website.service.implementation;
 import com.codewithlei.e_commerce.website.dto.address.RequestAddressDTO;
 import com.codewithlei.e_commerce.website.dto.address.ResponseAddressDTO;
 import com.codewithlei.e_commerce.website.exception.addressException.AddressAlreadyExistException;
+import com.codewithlei.e_commerce.website.exception.addressException.AddressNotFoundException;
 import com.codewithlei.e_commerce.website.exception.userException.UserNotFoundException;
 import com.codewithlei.e_commerce.website.model.entity.AddressEntity;
 import com.codewithlei.e_commerce.website.model.entity.UserEntity;
@@ -14,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.management.RuntimeMXBean;
 import java.util.List;
+import java.util.Optional;
 
 import static com.codewithlei.e_commerce.website.dto.address.ResponseAddressDTO.format;
 
@@ -55,11 +58,12 @@ public class AddressServiceImpl implements AddressService {
        UserEntity user = userRepository.findByEmail(email)
                .orElseThrow(UserNotFoundException::new);
 
-       List<AddressEntity> userAddress = addressRepository.findByUser(user);
+       List<AddressEntity> userAddress = addressRepository.findByUserOrderByIdDesc(user);
 
 
        return userAddress.stream()
-                .map(address -> new ResponseAddressDTO(address.getFullName() ,format(address) , address.getIsDefault()))
+                .map(address -> new ResponseAddressDTO(address.getId(), address.getFullName(),
+                                                                    format(address) , address.getIsDefault()))
                 .toList();
     }
     @Override
@@ -67,12 +71,21 @@ public class AddressServiceImpl implements AddressService {
        UserEntity user = userRepository.findByEmail(email)
                .orElseThrow(UserNotFoundException::new);
 
-        AddressEntity userAddress = addressRepository.findByUserAndIsDefault(user , true);
-        return new ResponseAddressDTO(userAddress.getFullName() ,
+        AddressEntity userAddress = addressRepository.findByUserAndIsDefault(user , true)
+                        .orElseThrow(AddressNotFoundException::new);
+        System.out.println("Status: " + userAddress);
+        return new ResponseAddressDTO(userAddress.getId(),
+                                      userAddress.getFullName(),
                                       format(userAddress) ,
                                       userAddress.getIsDefault());
+    }
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteAddress(String email , Long id){
+      UserEntity user = userRepository.findByEmail(email)
+              .orElseThrow(UserNotFoundException::new);
 
-
+      addressRepository.deleteByUserAndId(user , id);
     }
 
 

@@ -79,5 +79,13 @@ public class ProfileSettingsController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(paymentService.addPaymentMethod(email , request));
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAddress(Authentication authentication , @PathVariable("id") Long id){
+        String email = authentication.getName();
+        addressService.deleteAddress(email , id);
+
+        return ResponseEntity.noContent()
+                .build();
+    }
 
 }

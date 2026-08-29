@@ -8,6 +8,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class ResponseAddressDTO {
+    private Long id;
     private String fullName;
     private String address;
     private Boolean isDefault;
