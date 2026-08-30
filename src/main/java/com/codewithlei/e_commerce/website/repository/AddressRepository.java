@@ -30,5 +30,7 @@ public interface AddressRepository extends JpaRepository<AddressEntity , Long > 
     @Transactional
     void deleteByUserAndId(UserEntity user, Long id);
 
+    AddressEntity findByUserAndId(UserEntity user, Long id);
+
 
 }

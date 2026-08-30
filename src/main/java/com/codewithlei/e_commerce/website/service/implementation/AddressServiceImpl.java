@@ -2,6 +2,7 @@ package com.codewithlei.e_commerce.website.service.implementation;
 
 import com.codewithlei.e_commerce.website.dto.address.RequestAddressDTO;
 import com.codewithlei.e_commerce.website.dto.address.ResponseAddressDTO;
+import com.codewithlei.e_commerce.website.dto.address.ResponseShowFullAddressDTO;
 import com.codewithlei.e_commerce.website.exception.addressException.AddressAlreadyExistException;
 import com.codewithlei.e_commerce.website.exception.addressException.AddressNotFoundException;
 import com.codewithlei.e_commerce.website.exception.userException.UserNotFoundException;
@@ -12,6 +13,7 @@ import com.codewithlei.e_commerce.website.repository.UserRepository;
 import com.codewithlei.e_commerce.website.service.AddressService;
 import com.codewithlei.e_commerce.website.validation.AddressValidation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,6 +88,21 @@ public class AddressServiceImpl implements AddressService {
               .orElseThrow(UserNotFoundException::new);
 
       addressRepository.deleteByUserAndId(user , id);
+    }
+    @Override
+    public ResponseShowFullAddressDTO getAddress(String email , Long id){
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        AddressEntity address = addressRepository.findByUserAndId(user , id);
+
+        return ResponseShowFullAddressDTO.builder()
+                .fullName(address.getFullName())
+                .street(address.getStreet())
+                .city(address.getCity())
+                .state(address.getState())
+                .zipCode(address.getZipCode())
+                .build();
     }
 
 

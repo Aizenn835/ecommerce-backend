@@ -2,6 +2,7 @@ package com.codewithlei.e_commerce.website.controller;
 
 import com.codewithlei.e_commerce.website.dto.address.RequestAddressDTO;
 import com.codewithlei.e_commerce.website.dto.address.ResponseAddressDTO;
+import com.codewithlei.e_commerce.website.dto.address.ResponseShowFullAddressDTO;
 import com.codewithlei.e_commerce.website.dto.payment.RequestPaymentDTO;
 import com.codewithlei.e_commerce.website.dto.payment.ResponsePaymentDTO;
 import com.codewithlei.e_commerce.website.dto.user.ResponseViewUserInformationDTO;
@@ -63,6 +64,12 @@ public class ProfileSettingsController {
     public ResponseAddressDTO currentDefaultAddress(Authentication authentication){
         String email = authentication.getName();
         return addressService.showDefaultAddress(email);
+    }
+    @GetMapping("/{id}")
+    public ResponseShowFullAddressDTO getAddress(Authentication authentication ,
+                                                 @PathVariable("id") Long id){
+        String email = authentication.getName();
+        return addressService.getAddress(email , id );
     }
     @PostMapping("/add-address")
     public ResponseEntity<Map<String , String>> addAddress(Authentication authentication ,
