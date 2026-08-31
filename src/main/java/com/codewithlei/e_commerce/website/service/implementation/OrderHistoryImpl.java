@@ -22,7 +22,6 @@ public class OrderHistoryImpl implements OrderHistoryService {
     private final OrderHistoryRepository orderHistoryRepository;
     private final OrderMapper orderMapper;
 
-
     @Override
     public List<ResponseHistoryDTO> getOrderHistory(String email){
         UserEntity user = userRepository.findByEmail(email)
@@ -32,11 +31,6 @@ public class OrderHistoryImpl implements OrderHistoryService {
                 .map(orderMapper::mapToDTO)
                 .toList();
     }
-//    @Override
-//    public ResponseOrderSummaryDTO getOrderSummary(String email ) {
-//        UserEntity user = userRepository.findByEmail(email)
-//                .orElseThrow(UserNotFoundException::new);
-//
-//    }
+
 
 }

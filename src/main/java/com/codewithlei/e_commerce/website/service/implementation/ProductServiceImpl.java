@@ -68,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
     }
     @Override
     public Long getCount(){
-        return productRepository.count(); // delete this later.
+        return productRepository.count(); // this can be used in home.html.
     }
     @Override
     public ProductDTO getById(Long id){

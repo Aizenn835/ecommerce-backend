@@ -155,6 +155,7 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(CartNotFoundException::new);
         cartRepository.delete(cart);
     }
+    // need to get the shipping method ASAP
     public ResponseOrderConfirmationDTO purchaseCart(String email){
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);

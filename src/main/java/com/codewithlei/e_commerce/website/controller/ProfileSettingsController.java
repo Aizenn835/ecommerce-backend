@@ -86,6 +86,15 @@ public class ProfileSettingsController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(paymentService.addPaymentMethod(email , request));
     }
+    @PutMapping("{id}")
+    public ResponseEntity<Map<String , String>> update(Authentication authentication,
+                                                     @PathVariable("id") Long id ,
+                                                     @RequestBody @Valid RequestAddressDTO request
+                                                     ){
+        String email = authentication.getName();
+        addressService.updateAddressInfo(email , id , request);
+        return ResponseEntity.ok(Map.of("message" , "Successfully Updated"));
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAddress(Authentication authentication , @PathVariable("id") Long id){
         String email = authentication.getName();
