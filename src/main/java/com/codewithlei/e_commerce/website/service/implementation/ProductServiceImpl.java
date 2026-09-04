@@ -7,7 +7,6 @@ import com.codewithlei.e_commerce.website.mapper.ProductMapper;
 import com.codewithlei.e_commerce.website.model.entity.ProductEntity;
 import com.codewithlei.e_commerce.website.model.enums.Category;
 import com.codewithlei.e_commerce.website.repository.ProductRepository;
-import com.codewithlei.e_commerce.website.repository.UserRepository;
 import com.codewithlei.e_commerce.website.service.ProductService;
 import com.codewithlei.e_commerce.website.validation.ProductValidation;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,6 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
     private final ImageServiceImpl imageService;
     private final ProductValidation productValidation;
-    private final UserRepository userRepository;
 
     @Override
     public List<ProductDTO> getAllProduct(){
@@ -66,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity updated = productMapper.updateToMapEntity(product , dto , image);
         return productMapper.mapToDTO(productRepository.save(updated));
     }
-    @Override
+    @Override   
     public Long getCount(){
         return productRepository.count(); // this can be used in home.html.
     }

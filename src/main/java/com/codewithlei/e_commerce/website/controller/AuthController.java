@@ -27,6 +27,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Map.of("message" , "Successfully register"));
     }
+
     @PostMapping("/login")
     public ResponseEntity<AuthToken> login(@RequestBody LoginRequest loginRequest){
         return ResponseEntity.status(HttpStatus.OK)

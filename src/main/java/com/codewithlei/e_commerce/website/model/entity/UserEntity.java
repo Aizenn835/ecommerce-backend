@@ -1,5 +1,6 @@
 package com.codewithlei.e_commerce.website.model.entity;
 
+import com.codewithlei.e_commerce.website.model.entity.payment.PaymentMethodEntity;
 import com.codewithlei.e_commerce.website.model.enums.Roles;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -43,7 +44,9 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AddressEntity> address;
 
-    @OneToMany(mappedBy = "user" , fetch = FetchType.LAZY , cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PaymentEntity> payment;
+    @OneToMany(mappedBy = "user" , orphanRemoval = true)
+    private List<PaymentMethodEntity> paymentMethod;
+
+
 
 }

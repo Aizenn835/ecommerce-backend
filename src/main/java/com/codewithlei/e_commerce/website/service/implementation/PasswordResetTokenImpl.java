@@ -63,7 +63,7 @@ public class PasswordResetTokenImpl implements PasswordResetTokenService {
                     return true;
                 }).orElse(false);
     }
-    public int generateCode(){
+    private int generateCode(){
         return 100000 + secureRandom.nextInt(900000);
     }
 

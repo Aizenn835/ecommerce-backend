@@ -9,16 +9,22 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 public class RequestPaymentDTO {
-    @NotBlank(message = "Please Enter Payment Provider")
-    private String provider;
-    private String paymentMethodToken; // might use this later if i have a real payment token
-    @NotBlank(message = "Please specify the card brand")
-    private String cardBrand;
-    @NotBlank(message = "Last four digits of the credit card is missing!")
-    private String lastFourDigits;
-    @NotBlank(message = "Enter expiry month")
-    private String expiryMonth;
-    @NotBlank(message = "Enter expiry year")
-    private String expiryYear;
+    @NotBlank
+    private String paymentChoice; // card, e-wallet
     private Boolean isDefault;
+    // Card
+    @NotBlank
+    private String cardHolderName;
+    @NotBlank
+    private String lastFourNumber;
+    @NotBlank
+    private Integer expiry;
+    @NotBlank
+    private String cardBrand;
+
+    // E-wallet
+    @NotBlank
+    private String provider;
+    @NotBlank
+    private String walletIdentifier;
 }

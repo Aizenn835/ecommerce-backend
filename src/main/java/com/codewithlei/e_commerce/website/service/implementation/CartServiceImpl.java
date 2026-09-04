@@ -160,11 +160,13 @@ public class CartServiceImpl implements CartService {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
         List<CartEntity> cartItems = cartRepository.findByUser(user);
+
         if(cartItems.isEmpty()){
             throw new CartEmptyException("User cart is empty");
         }
         String orderNumber = "ORD-" + generateCode();
         LocalDate orderDate = LocalDate.now();
+
         List<OrderItemResponse> itemResponses = cartItems
                 .stream()
                 .map(cart -> {
@@ -218,7 +220,7 @@ public class CartServiceImpl implements CartService {
                 .build();
 
     }
-    public int generateCode(){
+    private int generateCode(){
         return 1000 + secureRandom.nextInt(9000);
     }
 

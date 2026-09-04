@@ -32,7 +32,6 @@ public class ProfileSettingsController {
 
     private final UserService userService;
     private final AddressService addressService;
-    private final PaymentService paymentService;
 
     @PutMapping("/profile")
     public ResponseEntity<Map<String , String>> updateProfile(Authentication authentication ,
@@ -78,13 +77,6 @@ public class ProfileSettingsController {
         addressService.addAddress(email , request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Map.of("message" , "Saved!"));
-    }
-    @PostMapping("/add-payment")
-    public ResponseEntity<ResponsePaymentDTO> addPayment(Authentication authentication ,
-                                                         @RequestBody @Valid RequestPaymentDTO request){
-        String email = authentication.getName();
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(paymentService.addPaymentMethod(email , request));
     }
     @PutMapping("{id}")
     public ResponseEntity<Map<String , String>> update(Authentication authentication,

@@ -1,10 +1,11 @@
 package com.codewithlei.e_commerce.website.repository;
 
-import com.codewithlei.e_commerce.website.model.entity.PaymentEntity;
+import com.codewithlei.e_commerce.website.model.entity.UserEntity;
+import com.codewithlei.e_commerce.website.model.entity.payment.PaymentMethodEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface PaymentRepository extends JpaRepository<PaymentEntity , Long> {
-    boolean existsByCardBrandAndLastFourDigits(String cardBrand, String lastFourDigits);
+import java.util.List;
+
+public interface PaymentRepository extends JpaRepository<PaymentMethodEntity, Long> {
+    List<PaymentMethodEntity> findByUser(UserEntity user);
 }

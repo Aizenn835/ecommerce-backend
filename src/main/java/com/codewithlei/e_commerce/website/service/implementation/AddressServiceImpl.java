@@ -39,6 +39,7 @@ public class AddressServiceImpl implements AddressService {
            throw new AddressAlreadyExistException("Address Already Existed!");
        }
        // if the user address is less than equal to 1 make it the default address
+
        if(request.getIsDefault()){
            addressRepository.clearDefaultAddress(user);
        }
