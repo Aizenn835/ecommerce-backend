@@ -4,64 +4,71 @@ import com.codewithlei.e_commerce.website.dto.payment.RequestPaymentDTO;
 import com.codewithlei.e_commerce.website.dto.payment.ResponsePaymentDTO;
 import com.codewithlei.e_commerce.website.exception.paymentException.PaymentChoiceInvalidException;
 import com.codewithlei.e_commerce.website.exception.userException.UserNotFoundException;
+import com.codewithlei.e_commerce.website.mapper.PaymentMapper;
 import com.codewithlei.e_commerce.website.model.entity.UserEntity;
-import com.codewithlei.e_commerce.website.model.entity.payment.CardPaymentEntity;
+import com.codewithlei.e_commerce.website.model.entity.payment.CreditCardEntity;
 import com.codewithlei.e_commerce.website.model.entity.payment.EWalletEntity;
 import com.codewithlei.e_commerce.website.model.entity.payment.PaymentMethodEntity;
-import com.codewithlei.e_commerce.website.repository.PaymentRepository;
+import com.codewithlei.e_commerce.website.repository.PaymentMethodRepository;
 import com.codewithlei.e_commerce.website.repository.UserRepository;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.codewithlei.e_commerce.website.service.PaymentMethodService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PaymentServiceImpl {
-    private final PaymentRepository paymentRepository;
-    private final UserRepository userRepository;
+public class PaymentServiceImpl implements PaymentMethodService {
 
+    private final PaymentMethodRepository paymentMethodRepository;
+    private final UserRepository userRepository;
+    private final PaymentMapper paymentMapper;
+
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
-    public void addPaymentMethod(String email , RequestPaymentDTO request){
+    public void addPaymentMethods(String email , RequestPaymentDTO request){
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
-        PaymentMethodEntity payment = switch (request.getPaymentChoice()){
-            case "CARD" -> CardPaymentEntity.builder()
+        PaymentMethodEntity payment = switch (request.getPaymentType()){
+            case "EWALLET" -> EWalletEntity.builder()
                     .user(user)
-                    .isDefault(request.getIsDefault())
                     .createdAt(LocalDateTime.now())
-                    .cardHolderName(request.getCardHolderName())
-                    .cardLastFourDigits(extractLastDigits(request.getLastFourNumber()))
-                    .cardBrand(request.getCardBrand())
-                    .expiry(request.getExpiry())
-                    .build();
-
-            case "E-WALLET" -> EWalletEntity.builder()
-                    .user(user)
                     .isDefault(request.getIsDefault())
-                    .createdAt(LocalDateTime.now())
                     .provider(request.getProvider())
                     .walletIdentifier(request.getWalletIdentifier())
+                    .build();
+
+            case "CARD"-> CreditCardEntity.builder()
+                    .user(user)
+                    .createdAt(LocalDateTime.now())
+                    .isDefault(request.getIsDefault())
+                    .cardHolderName(request.getCardHolderName())
+                    .cardLastFourDigits(extractLastFourDigits(request.getCardLastFourDigits()))
+                    .month(request.getMonth())
+                    .year(request.getYear())
                     .build();
 
             default -> throw new PaymentChoiceInvalidException();
         };
 
-        paymentRepository.save(payment);
+        paymentMethodRepository.save(payment);
     }
-    private String extractLastDigits(String cardNumber){
-        return cardNumber.substring(12);
+    private String extractLastFourDigits(String creditCard){
+        return creditCard.substring(12);
     }
-    public ResponsePaymentDTO viewAvailablePaymentMethods(String email){
+    public List<ResponsePaymentDTO> viewPaymentMethod(String email){
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
-        return paymentRepository.findByUser(user)
+        return paymentMethodRepository.findByUser(user)
                 .stream()
-                .map()
+                .map(paymentMapper::mapToDTO)
+                .toList();
+
     }
+
 }

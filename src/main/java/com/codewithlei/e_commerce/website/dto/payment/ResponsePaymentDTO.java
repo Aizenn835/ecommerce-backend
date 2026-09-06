@@ -1,23 +1,30 @@
 package com.codewithlei.e_commerce.website.dto.payment;
 
-
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@AllArgsConstructor
+
+@Data
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponsePaymentDTO {
+    //needed values:
     private Long id;
-
-    // payment method
-    private String providerName;
-    private String lastFourDigits;
-    private String expiry;
-    private String walletIdentifier;
     private LocalDateTime createdAt;
-
     private Boolean isDefault;
+    private String paymentType;
+
+    //e-wallet needed values:
+    private String provider;
+    private String walletIdentifier;
+
+    // card needed values:
+    private String cardHolderName;
+    private String cardLastFourDigits;
+    private int month;
+    private int year;
+
 }

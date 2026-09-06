@@ -1,19 +1,18 @@
 package com.codewithlei.e_commerce.website.model.entity.payment;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "e_wallet")
-@DiscriminatorValue("EWALLET")
+@Table(name = "ewallet")
+@DiscriminatorValue(value = "EWALLET")
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@NoArgsConstructor(access =  AccessLevel.PROTECTED)
 @SuperBuilder
 public class EWalletEntity extends PaymentMethodEntity{
     @Column(nullable = false)
@@ -21,5 +20,4 @@ public class EWalletEntity extends PaymentMethodEntity{
 
     @Column(nullable = false)
     private String walletIdentifier;
-
 }

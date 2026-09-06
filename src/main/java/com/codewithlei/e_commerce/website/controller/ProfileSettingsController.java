@@ -10,7 +10,7 @@ import com.codewithlei.e_commerce.website.dto.user.updatePasswordUser.RequestNew
 import com.codewithlei.e_commerce.website.dto.user.updateViewUser.RequestUpdateUserDTO;
 import com.codewithlei.e_commerce.website.dto.user.updateViewUser.ResponseUpdatePfpDTO;
 import com.codewithlei.e_commerce.website.service.AddressService;
-import com.codewithlei.e_commerce.website.service.PaymentService;
+import com.codewithlei.e_commerce.website.service.PaymentMethodService;
 import com.codewithlei.e_commerce.website.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +32,7 @@ public class ProfileSettingsController {
 
     private final UserService userService;
     private final AddressService addressService;
+    private final PaymentMethodService paymentMethodService;
 
     @PutMapping("/profile")
     public ResponseEntity<Map<String , String>> updateProfile(Authentication authentication ,
@@ -69,6 +70,18 @@ public class ProfileSettingsController {
                                                  @PathVariable("id") Long id){
         String email = authentication.getName();
         return addressService.getAddress(email , id );
+    }
+    @GetMapping("/payments")
+    public List<ResponsePaymentDTO> viewPaymentMethods(Authentication authentication){
+        String email = authentication.getName();
+        return paymentMethodService.viewPaymentMethod(email);
+    }
+    @PostMapping("/add-payment")
+    public ResponseEntity<Map<String , String>> addPaymentMethod(Authentication authentication ,
+                                                               @RequestBody RequestPaymentDTO request){
+            String email = authentication.getName();
+            paymentMethodService.addPaymentMethods(email , request);
+            return ResponseEntity.ok(Map.of("message", "Successfully added to payment methods!"));
     }
     @PostMapping("/add-address")
     public ResponseEntity<Map<String , String>> addAddress(Authentication authentication ,
