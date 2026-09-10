@@ -10,17 +10,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class PaymentMapper {
 
-    public ResponsePaymentDTO mapToDTO(PaymentMethodEntity payment){
+    public static ResponsePaymentDTO mapToDTO(PaymentMethodEntity payment){
         ResponsePaymentDTOBuilder builder = ResponsePaymentDTO.builder()
                 .id(payment.getId())
                 .createdAt(payment.getCreatedAt())
-                .isDefault(payment.getIsDefault());
+                .isDefault(payment.getIsDefault())
+                .cardBrand(payment.getCardBrand());
 
         if(payment instanceof CreditCardEntity card){
-            String buildLastDigits = "••••" + card.getCardLastFourDigits();
             builder
                     .cardHolderName(card.getCardHolderName())
-                    .cardLastFourDigits(buildLastDigits)
+                    .cardLastFourDigits(card.getCardLastFourDigits())
                     .month(card.getMonth())
                     .year(card.getYear());
         }else if(payment instanceof EWalletEntity ewallet){
@@ -31,4 +31,5 @@ public class PaymentMapper {
         }
         return builder.build();
     }
+
 }

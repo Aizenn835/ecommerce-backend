@@ -13,6 +13,7 @@ import com.codewithlei.e_commerce.website.exception.passwordResetTokenException.
 import com.codewithlei.e_commerce.website.exception.passwordResetTokenException.SamePasswordException;
 import com.codewithlei.e_commerce.website.exception.paymentException.PaymentChoiceInvalidException;
 import com.codewithlei.e_commerce.website.exception.paymentException.PaymentMethodAlreadyExistException;
+import com.codewithlei.e_commerce.website.exception.paymentException.PaymentNotFoundException;
 import com.codewithlei.e_commerce.website.exception.productException.ProductNotFoundException;
 import com.codewithlei.e_commerce.website.exception.userException.UserAlreadyExistException;
 import com.codewithlei.e_commerce.website.exception.userException.UserEmailUnavailableException;
@@ -197,5 +198,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(error);
     }
-
+    @ExceptionHandler(PaymentNotFoundException.class)
+    public ResponseEntity<?> handlePaymentDoesNotExist(PaymentNotFoundException e){
+        ErrorResponse error = ErrorResponse.builder()
+                .status(404)
+                .response(e.getMessage())
+                .localDateTime(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
 }

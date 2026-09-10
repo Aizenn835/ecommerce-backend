@@ -116,7 +116,6 @@ public class AddressServiceImpl implements AddressService {
         if(request.getIsDefault()){
             addressRepository.clearDefaultAddress(user);
         }
-
         AddressEntity update = addressMapper.mapToEntity(address , request);
 
         addressRepository.save(update);

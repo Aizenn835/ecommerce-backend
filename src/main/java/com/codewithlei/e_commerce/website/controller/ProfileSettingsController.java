@@ -14,6 +14,7 @@ import com.codewithlei.e_commerce.website.service.PaymentMethodService;
 import com.codewithlei.e_commerce.website.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -76,6 +77,16 @@ public class ProfileSettingsController {
         String email = authentication.getName();
         return paymentMethodService.viewPaymentMethod(email);
     }
+    @GetMapping("/payment/{id}")
+    public ResponsePaymentDTO showPaymentInfo(Authentication authentication , @PathVariable("id") Long id){
+        String email = authentication.getName();
+        return paymentMethodService.getPaymentInfoById(email , id);
+    }
+    @GetMapping("/payment/default")
+    public ResponsePaymentDTO showDefaultPayment(Authentication authentication){
+        String email = authentication.getName();
+        return paymentMethodService.getDefaultPaymentMethod(email);
+    }
     @PostMapping("/add-payment")
     public ResponseEntity<Map<String , String>> addPaymentMethod(Authentication authentication ,
                                                                @RequestBody RequestPaymentDTO request){
@@ -91,6 +102,7 @@ public class ProfileSettingsController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Map.of("message" , "Saved!"));
     }
+
     @PutMapping("{id}")
     public ResponseEntity<Map<String , String>> update(Authentication authentication,
                                                      @PathVariable("id") Long id ,
@@ -108,5 +120,13 @@ public class ProfileSettingsController {
         return ResponseEntity.noContent()
                 .build();
     }
+    @DeleteMapping("/payment/{id}")
+    public ResponseEntity<Void> deletePaymentMethod(Authentication authentication , @PathVariable("id") Long id){
 
+        String email = authentication.getName();
+        paymentMethodService.deletePaymentMethod(email , id);
+
+        return ResponseEntity.noContent()
+                .build();
+    }
 }

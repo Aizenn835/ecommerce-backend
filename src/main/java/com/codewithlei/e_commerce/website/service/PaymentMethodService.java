@@ -11,4 +11,8 @@ import java.util.List;
 public interface PaymentMethodService {
     void addPaymentMethods(String email , RequestPaymentDTO request);
     List<ResponsePaymentDTO> viewPaymentMethod(String email);
+    void deletePaymentMethod(String email , Long id);
+    ResponsePaymentDTO getPaymentInfoById(String email , Long id);
+    ResponsePaymentDTO getDefaultPaymentMethod(String email);
+
 }

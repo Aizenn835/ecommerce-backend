@@ -2,12 +2,12 @@ package com.codewithlei.e_commerce.website.dto.payment;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
 
 @Data
 public class RequestPaymentDTO {
     private Boolean isDefault;
     private String paymentType;
+    private String cardBrand;
 
     // e-wallet
     private String provider;

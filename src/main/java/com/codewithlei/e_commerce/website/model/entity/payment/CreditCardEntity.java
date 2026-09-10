@@ -6,10 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -17,6 +14,7 @@ import lombok.experimental.SuperBuilder;
 @DiscriminatorValue(value = "CARD")
 @AllArgsConstructor
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 public class CreditCardEntity extends PaymentMethodEntity{
@@ -31,7 +29,7 @@ public class CreditCardEntity extends PaymentMethodEntity{
     private int month;
 
     @Column(nullable = false)
-    @Min(2026)
+    @Min(value = 2026)
     private int year;
 
 

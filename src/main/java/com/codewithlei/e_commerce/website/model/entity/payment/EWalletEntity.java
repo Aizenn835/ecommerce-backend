@@ -1,10 +1,7 @@
 package com.codewithlei.e_commerce.website.model.entity.payment;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -13,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 @SuperBuilder
 public class EWalletEntity extends PaymentMethodEntity{
     @Column(nullable = false)
