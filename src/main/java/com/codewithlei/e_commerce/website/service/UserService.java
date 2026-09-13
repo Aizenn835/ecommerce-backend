@@ -20,4 +20,5 @@ public interface UserService {
     ResponseViewUserInformationDTO viewUserInfo(String email);
     void changePassword(String email , RequestNewPasswordDTO request);
     ResponseUpdatePfpDTO changePfp(String email , MultipartFile file) throws IOException;
+    void deleteAccount(String email);
 }

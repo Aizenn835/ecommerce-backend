@@ -28,6 +28,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -185,5 +186,14 @@ public class UserServiceImpl implements UserService {
         }
 
         return new ResponseUpdatePfpDTO(updated.getPfpUrl());
+    }
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteAccount(String email){
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        user.setDeleted(true);
+        userRepository.save(user);
     }
 }

@@ -129,4 +129,10 @@ public class ProfileSettingsController {
         return ResponseEntity.noContent()
                 .build();
     }
+    @DeleteMapping("/user")
+    public ResponseEntity<Void> deleteAccount(Authentication authentication){
+        String email = authentication.getName();
+        userService.deleteAccount(email);
+        return ResponseEntity.noContent().build();
+    }
 }

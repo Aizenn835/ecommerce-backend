@@ -47,6 +47,13 @@ public class UserEntity {
     @OneToMany(mappedBy = "user" , orphanRemoval = true)
     private List<PaymentMethodEntity> paymentMethod;
 
+    @OneToMany(mappedBy = "user")
+    private List<OrderHistoryEntity> order;
+
+    @Column(name = "is_deleted", nullable = false)
+    @Builder.Default
+    @Setter
+    private boolean isDeleted = false;
 
 
 }
